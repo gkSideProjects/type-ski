@@ -1,0 +1,49 @@
+/*
+  Author: George Kombostiotis,
+  Version: 1.0.0
+ */
+
+body {
+    margin: 0;
+}
+
+.header {
+    height: 100px;
+    display: flex;
+    padding: 20px;
+    background-image: linear-gradient(to right, orange, darkorange);
+    border-bottom: 3px black solid;
+    font-family: Solway, sans-serif;
+}
+
+#header-image {
+    height: 100px;
+    width: 150px;
+}
+
+.header-menu li {
+    list-style-type: none;
+    display: inline;
+    padding-left: 10px;
+}
+
+.header-menu {
+    margin-top: 70px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+a:visited, a:link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.main-content {
+    height: 400px;
+    width: 600px;
+    background-color: #EDEDED;
+    margin: 50px auto auto auto;
+    border-radius: 20px;
+    border-color: lightgrey;
+    border-style: solid;
+}
