@@ -76,3 +76,29 @@ a:visited, a:link {
         width: 90%;
     }
 }
+
+.enter-text {
+    width: 80%;
+    margin: 10px auto 10px auto;
+    display: flex;
+}
+
+.type-text {
+    width: 80%;
+    display: flex;
+    margin: 10px auto 30px auto;
+    font-size: 20px;
+}
+
+.practice-div {
+    margin-top: 50px;
+}
+
+.enter-text {
+    height: 20px;
+    font-size: 20px;
+
+}
+
+
+

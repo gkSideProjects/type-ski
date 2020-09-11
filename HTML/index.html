@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../CSS/customStylesheet.css" >
     <link href="https://fonts.googleapis.com/css2?family=Solway&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
 
 </head>
 <body>
@@ -22,21 +22,27 @@
             <a href="index.html"><img id="header-image" src="../CONTENT/images/type-ski logo-cut.png"></a>
         </div>
         <nav class="header-menu">
-            <li id="app"><a href="about.html">{{ product }}</a></li>
+            <li><a href="about.html">about</a></li>
             <li><a href="contact.html">contact</a></li>
         </nav>
     </div>
     <div class="main-content">
-        <div class="main-menu">
+        <div id="practice" v-show="hide" class="main-menu">
             <img style="height: 40px; width: 70px;" src="../CONTENT/images/type-ski logo-cut.png">
-            <a href="#"><p style="margin: 0; font-size: 30px;">Enter race</p></a>
+            <a href="#"><p  style="margin: 0; font-size: 30px;">Enter race</p></a>
         </div>
+        <div id="input-text" class="practice-div">
+            <p id="text-to-type" class="type-text"> By the benefit of words and ratiocination they exceed brute beasts in knowledge, and the commodities that accompany the same, so they exceed them also in error.</p>
+            <input v-model="value" v-on:keyup.32="clearText" placeholder="Start typing to start the timer"  class="enter-text">
+        </div>
+
 
     </div>
 
 </div>
 
 <!-- javascript -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="../JS/main.js"></script>
 </body>
 </html>
