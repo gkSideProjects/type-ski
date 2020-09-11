@@ -3,11 +3,16 @@
   Version: 1.0.0
  */
 
-body {
+html, body {
     margin: 0;
+    max-width: 100%;
+    min-width: 500px;
+    overflow-x: hidden;
+
 }
 
 .header {
+    width: 100%;
     height: 100px;
     display: flex;
     padding: 20px;
@@ -40,10 +45,34 @@ a:visited, a:link {
 
 .main-content {
     height: 400px;
-    width: 600px;
+    width: 500px;
     background-color: #EDEDED;
-    margin: 50px auto auto auto;
+    margin: 50px auto 50px auto;
     border-radius: 20px;
     border-color: lightgrey;
     border-style: solid;
+    font-family: Solway, sans-serif;
+
+}
+
+.main-menu {
+    margin-top: 30px;
+    margin-left: 30px;
+    display: flex;
+}
+
+.main-menu > a {
+    padding-left: 20px;
+}
+
+@media only screen and (max-width: 550px){
+    html, body{
+        min-width: 100%;
+    }
+    .header {
+        min-width: 100%;
+    }
+    .main-content {
+        width: 90%;
+    }
 }
