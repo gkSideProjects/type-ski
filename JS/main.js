@@ -4,7 +4,8 @@ var textArray = [];
 
 // Converts text to array
 function textToArray(text) {
-    textArray = text.split("");
+    textArray = text.split(" ");
+    return textArray;
 }
 
 
@@ -25,7 +26,7 @@ var app2 = new Vue({
     el: '#input-text',
     data: {
         value: "",
-        letters: [textToType],
+        letters: textToArray(textToType),
         show: false,
         arrayCount: 0,
         colour: "white",
@@ -36,7 +37,6 @@ var app2 = new Vue({
             this.value = "";
             if (event.key === " ") {
                 event.preventDefault();
-
             }
         },
         checkText(event) {
@@ -47,7 +47,6 @@ var app2 = new Vue({
         }
     }
 })
-
 
 
 window.onload = function() {
