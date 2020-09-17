@@ -22,6 +22,7 @@
     <list default="true" id="4fca1829-ae72-41ce-905a-428f771b4707" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CSS/customStylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/CSS/customStylesheet.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HTML/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/HTML/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JS/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/JS/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,7 +60,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -86,6 +87,10 @@
       <workItem from="1599847018476" duration="7728000" />
       <workItem from="1599982821150" duration="16712000" />
       <workItem from="1600098144629" duration="2691000" />
+      <workItem from="1600170894848" duration="2340000" />
+      <workItem from="1600181206094" duration="4645000" />
+      <workItem from="1600246884581" duration="7346000" />
+      <workItem from="1600331275845" duration="7317000" />
     </task>
     <task id="LOCAL-00001" summary="Added file structure and integrated repository to webstorm">
       <created>1599676353697</created>
@@ -129,18 +134,18 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1599677548925" />
-    <state x="414" y="126" key="SettingsEditor" timestamp="1599737907626">
+    <state x="414" y="126" key="SettingsEditor" timestamp="1600331329526">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="126" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1599737907626" />
+    <state x="414" y="126" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1600331329526" />
     <state x="462" y="354" key="Vcs.Push.Dialog.v2" timestamp="1599683144616">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="462" y="354" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1599683144616" />
-    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1599997736405">
+    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600253379750">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1599997736405" />
+    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600253379750" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1600000077936">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -44,15 +44,14 @@ a:visited, a:link {
 }
 
 .main-content {
-    height: 400px;
+    height: 450px;
     width: 500px;
-    background-color: #EDEDED;
+    background-image: linear-gradient(to right, orange, darkorange);
     margin: 50px auto 50px auto;
     border-radius: 20px;
     border-color: lightgrey;
     border-style: solid;
     font-family: Solway, sans-serif;
-
 
 }
 
@@ -81,12 +80,16 @@ a:visited, a:link {
 .type-text {
     font-size: 20px;
     margin: 0;
-    padding-right: 10px;
+    padding-right: 7px;
     text-align: center;
 }
 
 
 .practice-div {
+    border-radius: 20px;
+    border-color: lightgrey;
+    border-style: solid;
+    background-color: white;
     margin: 50px auto 10px auto;
     display: flex;
     flex-direction: row;
@@ -95,14 +98,31 @@ a:visited, a:link {
 
 }
 
-.enter-text {
-    width: 100%;
-    margin: 30px auto 10px auto;
-    height: 20px;
-    font-size: 20px;
-    background-color: white;
+.text-border {
+    margin: 20px auto 20px auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 85%;
 }
 
+.enter-text {
+    border-radius: 5px;
+    width: 100%;
+    margin: 30px auto 10px auto;
+    height: 30px;
+    font-size: 25px;
+    background-color: white;
+    font-family: Solway, sans-serif;
+}
+
+.highlight-word {
+    background-color: lightgreen;
+    font-size: 20px;
+    margin: 0;
+    padding-right: 10px;
+    text-align: center;
+}
 
 
 

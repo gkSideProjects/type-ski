@@ -16,7 +16,7 @@
 
 </head>
 <body>
-<div class="homepage">
+<div id="main" class="homepage">
     <div class="header">
         <div>
             <a href="index.html"><img id="header-image" src="../CONTENT/images/type-ski logo-cut.png"></a>
@@ -26,16 +26,7 @@
             <li><a href="contact.html">contact</a></li>
         </nav>
     </div>
-    <div class="main-content">
-        <div id="practice" v-show="show" class="main-menu">
-            <img style="height: 40px; width: 60px;" src="../CONTENT/images/type-ski logo-cut.png">
-            <a href="#" v-on:click="hideElements" ><p  style="margin: 0; font-size: 30px;">Enter race</p></a>
-        </div>
-        <div id="input-text" v-show="show" class="practice-div">
-            <p id="text-to-type" class="type-text" :style="{ backgroundColor: textColour }" v-for="letter in letters">{{ letter }}</p>
-            <input type="text" :style="{ backgroundColor: colour } " class="enter-text" v-model="value" @keydown.space="clearText" @keyup="checkText">
-        </div>
-    </div>
+    <main-content class="main-content"></main-content>
 </div>
 
 <!-- javascript -->
