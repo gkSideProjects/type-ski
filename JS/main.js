@@ -14,7 +14,7 @@ Vue.component('main-content', {
             </div>
             <div v-show="showText" class="practice-div">
                 <div class="text-border">
-                    <p id="text-to-type" class="type-text" v-for="splitWord in splitWords">{{ splitWord }}</p>
+                    <p id="text-to-type" ref="wordRef" class="type-text" v-for="(splitWord) in splitWords">{{ splitWord }}</p>
                     <input class="enter-text" v-model="value" @keydown.space="clearText">
                 </div>
                 
@@ -28,15 +28,20 @@ Vue.component('main-content', {
             image: "../CONTENT/images/type-ski logo-cut.png",
             value: "",
             text: textToType,
-            arrayCount: 0
+            arrayCount: 0,
+            counter: 0
         }
     },
     methods: {
         clearText(event) {
-            if (this.value === this.splitWords[this.arrayCount] && event.key !== " " && this.value !== "") {
-                return this.arrayCount++;
+            if (this.value === this.splitWords[this.arrayCount] && (event.key === " " && this.value !== "")) {
+                this.$refs.wordRef[this.counter].style.color = "#00b300"
+                event.preventDefault();
+                this.counter++
+                this.value = "";
+                return this.arrayCount++
             }
-            this.value = "";
+            this.$refs.wordRef[this.counter].style.color = "indianred"
             if (event.key === " ") {
                 event.preventDefault();
             }
