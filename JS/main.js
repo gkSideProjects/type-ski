@@ -46,7 +46,9 @@ Vue.component('main-content', {
     },
     methods: {
         initiateInterval(){
-            this.timeInterval = setInterval(this.timerMethod, 1000)
+            if (this.timeInterval === 0) {
+                this.timeInterval = setInterval(this.timerMethod, 1000)
+            }
         },
         timerMethod() {
             this.seconds -= 1
