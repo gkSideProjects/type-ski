@@ -16,8 +16,8 @@ Vue.component('main-content', {
                 <div class="text-border">
                     <p id="text-to-type" v-show="showText"  ref="wordRef" class="type-text" v-for="(splitWord) in splitWords">{{ splitWord }}</p>
                     <input class="enter-text" @focus="initiateInterval" v-show="showInput" v-model="value" @keydown.space="clearText">
-                    <p>{{ ':' + seconds }}</p>
-                    <p id="information" v-show="showInformation">yo what up</p> 
+                    <p>{{ ':' + seconds + ' ' + wpm }}</p>
+                    <p id="information" v-show="showInformation"></p> 
                 </div>
             
             </div> 
@@ -75,6 +75,14 @@ Vue.component('main-content', {
         }
     },
     computed: {
+        wpm: function() {
+            if (this.seconds < 150 && this.arrayCount > 0) {
+                return Math.round((this.arrayCount / (150 - this.seconds)) * 60)
+            }
+            else {
+                return 0
+            }
+        },
         clickShow: function() {
             return (this.showMain = false, this.showPracticeDiv = true)
         },
@@ -96,66 +104,6 @@ var app = new Vue   ({
     data: {
     }
 })
-
-/*
-Vue.component('practice-menu', {
-    template: `
-         <div id="practice" v-show="show" class="main-menu">
-            <img style="height: 40px; width: 60px;" :src="image">
-            <a href="#" @click="{ clickShow }"><p style="margin: 0; font-size: 30px;">Enter race</p></a>
-        </div>
-    `,
-    data() {
-
-    },
-    methods: {
-
-    },
-    computed: {
-        clickShow: function() {
-            return this.show = false
-        }
-    }
-})
-
-
-Vue.component('display-text', {
-    template: `
-        <div id="input-text" class="practice-div">
-            <p id="text-to-type" class="type-text" v-for="splitWord in splitWords">{{ splitWord }}</p>
-            <input class="enter-text" v-model="value" @keydown.space="clearText" @keyup="checkText">
-        </div>        
-    `,
-    data() {
-       return {
-
-        }
-    },
-    methods: {
-        clearText(event) {
-            this.value = "";
-            if (event.key === " ") {
-                event.preventDefault();
-            }
-        },
-        checkText(event) {
-            if (this.value === this.words[this.arrayCount] && event.key !== " " && this.value !== "") {
-                this.arrayCount++;
-            }
-        }
-    },
-    computed: {
-        splitWords: {
-            get: function () {
-                return textArray = this.text.split(" ");
-            },
-            set: function(newTxt) {
-
-            }
-        }
-    }
-})
-*/
 
 
 
