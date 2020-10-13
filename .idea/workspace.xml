@@ -91,6 +91,9 @@
       <workItem from="1600331275845" duration="13336000" />
       <workItem from="1600415092730" duration="1890000" />
       <workItem from="1600419712063" duration="14035000" />
+      <workItem from="1600605029025" duration="742000" />
+      <workItem from="1602613692372" duration="2060000" />
+      <workItem from="1602615782947" duration="3408000" />
     </task>
     <task id="LOCAL-00001" summary="Added file structure and integrated repository to webstorm">
       <created>1599676353697</created>
@@ -142,10 +145,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="462" y="354" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1599683144616" />
-    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600253379750">
+    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1600607142670">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600253379750" />
+    <state x="792" y="426" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600607142670" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1600000077936">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

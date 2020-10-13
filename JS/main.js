@@ -15,7 +15,7 @@ Vue.component('main-content', {
             <div v-show="showPracticeDiv" class="practice-div">
                 <div class="text-border">
                     <p id="text-to-type" v-show="showText"  ref="wordRef" class="type-text" v-for="(splitWord) in splitWords">{{ splitWord }}</p>
-                    <input class="enter-text" @focus="initiateInterval" v-show="showInput" v-model="value" @keydown.space="clearText">
+                    <input class="enter-text" v-show="showInput" @keydown="clearText" @keyup="finish" v-model="value">
                     <p>{{ ':' + seconds + ' ' + wpm }}</p>
                     <p id="information" v-show="showInformation"></p> 
                 </div>
@@ -41,33 +41,35 @@ Vue.component('main-content', {
             arrayCount: 0,
             counter: 0,
             seconds: 150,
-            timeInterval: 0
+            timeInterval: 0,
+            letterCount: 1,
         }
     },
     methods: {
-        initiateInterval(){
-            if (this.timeInterval === 0) {
-                this.timeInterval = setInterval(this.timerMethod, 1000)
-            }
-        },
         timerMethod() {
             this.seconds -= 1
         },
+        finish(event) {
+            if (this.splitWords[this.arrayCount] === this.splitWords[this.splitWords.length - 1] && this.value === this.splitWords[this.arrayCount] ) {
+                clearInterval(this.timeInterval)
+                this.showText = false;
+                this.showInput = false;
+                this.showButton = true;
+                this.showInformation = true;
+            }
+        },
         clearText(event) {
-            if (this.value === this.splitWords[this.arrayCount] && (event.key === " " && this.value !== "")) {
+            if (this.timeInterval === 0) {
+                this.timeInterval = setInterval(this.timerMethod, 1000)
+            }
+
+            if (this.value === this.splitWords[this.arrayCount] && this.value !== "") {
                 this.$refs.wordRef[this.counter].style.color = "#00b300"
                 event.preventDefault();
                 this.counter++
                 this.value = "";
-                if (this.splitWords[this.arrayCount] === this.splitWords[this.splitWords.length - 1]) {
-                    clearInterval(this.timeInterval)
-                    this.showText = false;
-                    this.showInput = false;
-                    this.showButton = true;
-                    this.showInformation = true;
-                }
                 return this.arrayCount++
-            }   
+            }
             this.$refs.wordRef[this.counter].style.color = "indianred"
             if (event.key === " ") {
                 event.preventDefault();
