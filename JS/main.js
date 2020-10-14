@@ -2,7 +2,7 @@ window.onload = function() {
 
 }
 
-var textToType = "By the benefit of words and ratiocination they exceed brute beasts in knowledge, and the commodities that accompany the same, so they exceed them also in error.";
+var textToType = "By the benefit of words.";
 var textArray = [];
 
 Vue.component('main-content', {
@@ -14,7 +14,7 @@ Vue.component('main-content', {
             </div>
             <div v-show="showPracticeDiv" class="practice-div">
                 <div class="text-border">
-                    <p id="text-to-type" v-show="showText"  ref="wordRef" class="type-text" v-for="(splitWord) in splitWords">{{ splitWord }}</p>
+                    <p id="text-to-type" v-show="showText"  ref="wordRef" class="typeText"  v-for="(splitWord) in splitWords">{{ splitWord }}</p>
                     <input class="enter-text" v-show="showInput" @keydown="clearText" @keyup="finish" v-model="value">
                     <p>{{ ':' + seconds + ' ' + wpm }}</p>
                     <p id="information" v-show="showInformation"></p> 
@@ -22,7 +22,7 @@ Vue.component('main-content', {
             
             </div> 
             <div class="nextRaceDiv" v-show="showButton">
-                <button class="nextRace">next race</button>
+                <button @click="resetValues" class="nextRace">next race</button>
             </div>  
        
         </div>
@@ -46,6 +46,18 @@ Vue.component('main-content', {
         }
     },
     methods: {
+        resetValues()  {
+            this.letterCount = 1
+            this.timeInterval = 0
+            this.seconds = 150
+            this.counter = 0
+            this.arrayCount = 0
+            this.value = ""
+            this.showText = true
+            this.showInput = true
+            this.showButton = false
+        },
+
         timerMethod() {
             this.seconds -= 1
         },
@@ -56,6 +68,10 @@ Vue.component('main-content', {
                 this.showInput = false;
                 this.showButton = true;
                 this.showInformation = true;
+                for (var i = 0; i <= this.counter; i++){
+                    this.$refs.wordRef[i].style.color = "black"
+                }
+
             }
         },
         clearText(event) {
@@ -85,6 +101,7 @@ Vue.component('main-content', {
                 return 0
             }
         },
+
         clickShow: function() {
             return (this.showMain = false, this.showPracticeDiv = true)
         },

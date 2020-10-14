@@ -77,12 +77,21 @@ a:visited, a:link {
     }
 }
 
-.type-text {
+.typeText {
     font-size: 20px;
     margin: 0;
     padding-right: 7px;
     text-align: center;
 }
+
+.typeText2 {
+    font-size: 20px;
+    margin: 0;
+    padding-right: 7px;
+    text-align: center;
+    color: black;
+}
+
 
 
 .practice-div {
