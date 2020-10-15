@@ -21,7 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4fca1829-ae72-41ce-905a-428f771b4707" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CSS/customStylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/CSS/customStylesheet.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JS/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/JS/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +95,8 @@
       <workItem from="1602613692372" duration="2060000" />
       <workItem from="1602615782947" duration="3536000" />
       <workItem from="1602673357318" duration="764000" />
-      <workItem from="1602698098057" duration="3626000" />
+      <workItem from="1602698098057" duration="3888000" />
+      <workItem from="1602784715049" duration="8409000" />
     </task>
     <task id="LOCAL-00001" summary="Added file structure and integrated repository to webstorm">
       <created>1599676353697</created>

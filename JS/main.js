@@ -2,6 +2,11 @@ window.onload = function() {
 
 }
 
+var arrayOfTests = ["So, this is data collection for the month of March worldwide, emails and Skype calls. So France, 70 million. Germany, 500 million. Brazil, two billion. Inside the U.S., 3.1 billion emails and calls. That's not including any of the telecom company data.",
+    "I think the greatest freedom that I have gained, the fact that I don't have to worry about what happens tomorrow, Because I'm happy with what I've done Today."]
+
+var arrayOfTests2 = ["Yo, what up guys", "hey everybody what's going on"]
+
 var textToType = "By the benefit of words.";
 var textArray = [];
 
@@ -37,7 +42,6 @@ Vue.component('main-content', {
             showButton: false,
             image: "../CONTENT/images/type-ski logo-cut.png",
             value: "",
-            text: textToType,
             arrayCount: 0,
             counter: 0,
             seconds: 150,
@@ -46,21 +50,26 @@ Vue.component('main-content', {
         }
     },
     methods: {
-        resetValues()  {
-            this.letterCount = 1
-            this.timeInterval = 0
-            this.seconds = 150
-            this.counter = 0
-            this.arrayCount = 0
+        resetValues() {
             this.value = ""
             this.showText = true
             this.showInput = true
             this.showButton = false
+            this.seconds = 150
+            this.arrayCount = 0
+        },
+        resetValues1()  {
+            this.counter = 0
+            this.splitWords = 1
+            this.letterCount = 1
+            this.timeInterval = 0
+            this.value = ""
         },
 
         timerMethod() {
             this.seconds -= 1
         },
+
         finish(event) {
             if (this.splitWords[this.arrayCount] === this.splitWords[this.splitWords.length - 1] && this.value === this.splitWords[this.arrayCount] ) {
                 clearInterval(this.timeInterval)
@@ -68,10 +77,10 @@ Vue.component('main-content', {
                 this.showInput = false;
                 this.showButton = true;
                 this.showInformation = true;
-                for (var i = 0; i <= this.counter; i++){
+                for (var i = 0; i < this.$refs.wordRef.length; i++){
                     this.$refs.wordRef[i].style.color = "black"
                 }
-
+                this.resetValues1()
             }
         },
         clearText(event) {
@@ -92,10 +101,11 @@ Vue.component('main-content', {
             }
         }
     },
+
     computed: {
         wpm: function() {
             if (this.seconds < 150 && this.arrayCount > 0) {
-                return Math.round((this.arrayCount / (150 - this.seconds)) * 60)
+                return Math.round(Math.round((60 / (150 - this.seconds))) * this.arrayCount)
             }
             else {
                 return 0
@@ -103,18 +113,21 @@ Vue.component('main-content', {
         },
 
         clickShow: function() {
-            return (this.showMain = false, this.showPracticeDiv = true)
+            return (this.showMain = false, this.showPracticeDiv = true )
         },
 
         splitWords: {
             get: function () {
-                return textArray = this.text.split(" ");
+                return textArray = arrayOfTests[0].split(" ")
             },
-            set: function(newTxt) {
-
+            set: function (newVale) {
+                textArray = arrayOfTests[newVale].split(" ")
+                this.splitWords.length = textArray.length
+                for (var i = 0; i < textArray.length; i++) {
+                    this.splitWords[i] = textArray[i]
+                }
             }
         },
-
     }
 })
 
