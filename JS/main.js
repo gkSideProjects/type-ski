@@ -60,7 +60,7 @@ Vue.component('main-content', {
         },
         resetValues1()  {
             this.counter = 0
-            this.splitWords = 1
+            this.splitWords = Math.floor(Math.random() * 2)
             this.letterCount = 1
             this.timeInterval = 0
             this.value = ""
@@ -118,7 +118,7 @@ Vue.component('main-content', {
 
         splitWords: {
             get: function () {
-                return textArray = arrayOfTests[0].split(" ")
+                return textArray = arrayOfTests[Math.floor(Math.random() * 2)].split(" ")
             },
             set: function (newVale) {
                 textArray = arrayOfTests[newVale].split(" ")
