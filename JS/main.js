@@ -1,33 +1,34 @@
-window.onload = function() {
 
-}
-
+//Array of possible texts to be typed
 var arrayOfTests = ["So, this is data collection for the month of March worldwide, emails and Skype calls. So France, 70 million. Germany, 500 million. Brazil, two billion. Inside the U.S., 3.1 billion emails and calls. That's not including any of the telecom company data.",
     "I think the greatest freedom that I have gained, the fact that I don't have to worry about what happens tomorrow, Because I'm happy with what I've done Today."]
 
-var arrayOfTests2 = ["Yo, what up guys", "hey everybody what's going on"]
+//Array of texts for testing purposes
+var arrayOfTests2 = ["This is a test", "This is also a test"]
 
-var textToType = "By the benefit of words.";
+//Array that is filled by the chosen text from 'arrayOfTests' after a split of the text. Each word has it's own location in the array
 var textArray = [];
 
+//Vue component comprising of the main functionality of the site
 Vue.component('main-content', {
     template: `
         <div>
             <div v-show="showMain" class="main-menu">
                 <img style="height: 40px; width: 60px;" :src="image">
-                <a href="#" @click="{ clickShow }"><p style="margin: 0; font-size: 30px;">Enter race</p></a>
+                <a href="#" @click="clickShow"><p style="margin: 0; font-size: 30px;">Take test</p></a>
             </div>
             <div v-show="showPracticeDiv" class="practice-div">
                 <div class="text-border">
                     <p id="text-to-type" v-show="showText"  ref="wordRef" class="typeText"  v-for="(splitWord) in splitWords">{{ splitWord }}</p>
                     <input class="enter-text" v-show="showInput" @keydown="clearText" @keyup="finish" v-model="value">
-                    <p>{{ ':' + seconds + ' ' + wpm }}</p>
+                    <p>{{ 'Time : ' + seconds }}<br>{{ 'wpm : ' + wpm  }}</p>
                     <p id="information" v-show="showInformation"></p> 
                 </div>
             
             </div> 
             <div class="nextRaceDiv" v-show="showButton">
                 <button @click="resetValues" class="nextRace">next race</button>
+                <button @click="clickHome" class="nextRace">Home</button>
             </div>  
        
         </div>
@@ -50,6 +51,19 @@ Vue.component('main-content', {
         }
     },
     methods: {
+        clickShow() {
+            this.showMain = false
+            this.showPracticeDiv = true
+            this.resetValues()
+            this.resetValues1()
+        },
+
+        clickHome() {
+            this.showMain = true
+            this.showPracticeDiv = false
+            this.showButton = false
+        },
+
         resetValues() {
             this.value = ""
             this.showText = true
@@ -110,10 +124,6 @@ Vue.component('main-content', {
             else {
                 return 0
             }
-        },
-
-        clickShow: function() {
-            return (this.showMain = false, this.showPracticeDiv = true )
         },
 
         splitWords: {
