@@ -1,4 +1,3 @@
-
 //Array of possible texts to be typed
 var arrayOfTests = ["So, this is data collection for the month of March worldwide, emails and Skype calls. So France, 70 million. Germany, 500 million. Brazil, two billion. Inside the U.S., 3.1 billion emails and calls. That's not including any of the telecom company data.",
     "I think the greatest freedom that I have gained, the fact that I don't have to worry about what happens tomorrow, Because I'm happy with what I've done Today."]
@@ -21,8 +20,8 @@ Vue.component('main-content', {
                 <div class="text-border">
                     <p id="text-to-type" v-show="showText"  ref="wordRef" class="typeText"  v-for="(splitWord) in splitWords">{{ splitWord }}</p>
                     <input class="enter-text" v-show="showInput" @keydown="clearText" @keyup="finish" v-model="value">
-                    <p>{{ 'Time : ' + seconds }}<br>{{ 'wpm : ' + wpm  }}</p>
-                    <p id="information" v-show="showInformation"></p> 
+                    <p v-show="showTimer">{{ 'Time : ' + seconds }}<br>{{ 'wpm : ' + wpm  }}</p>
+                    <p id="information" v-show="showInformation">{{ 'You typed the text at ' + finalWpm + ' wpm' }}</p> 
                 </div>
             
             </div> 
@@ -35,6 +34,7 @@ Vue.component('main-content', {
     `,
     data() {
         return {
+            showTimer: false,
             showMain: true,
             showPracticeDiv: false,
             showText: true,
@@ -48,10 +48,12 @@ Vue.component('main-content', {
             seconds: 150,
             timeInterval: 0,
             letterCount: 1,
+            finalTime: 0
         }
     },
     methods: {
         clickShow() {
+            this.showTimer = true
             this.showMain = false
             this.showPracticeDiv = true
             this.resetValues()
@@ -65,6 +67,8 @@ Vue.component('main-content', {
         },
 
         resetValues() {
+            this.showInformation = false
+            this.showTimer = true
             this.value = ""
             this.showText = true
             this.showInput = true
@@ -86,11 +90,13 @@ Vue.component('main-content', {
 
         finish(event) {
             if (this.splitWords[this.arrayCount] === this.splitWords[this.splitWords.length - 1] && this.value === this.splitWords[this.arrayCount] ) {
+                this.finalTime = 150 - this.seconds
                 clearInterval(this.timeInterval)
-                this.showText = false;
-                this.showInput = false;
-                this.showButton = true;
-                this.showInformation = true;
+                this.showText = false
+                this.showInput = false
+                this.showButton = true
+                this.showInformation = true
+                this.showTimer = false
                 for (var i = 0; i < this.$refs.wordRef.length; i++){
                     this.$refs.wordRef[i].style.color = "black"
                 }
@@ -117,9 +123,13 @@ Vue.component('main-content', {
     },
 
     computed: {
+        finalWpm: function() {
+            return Math.round(((60 / this.finalTime)) * this.arrayCount)
+        },
+
         wpm: function() {
             if (this.seconds < 150 && this.arrayCount > 0) {
-                return Math.round(Math.round((60 / (150 - this.seconds))) * this.arrayCount)
+                return Math.round((60 / (150 - this.seconds)) * this.arrayCount)
             }
             else {
                 return 0
