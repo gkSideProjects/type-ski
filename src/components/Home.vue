@@ -1,10 +1,12 @@
 <script setup>
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, nextTick } from "vue";
+import Leaderboard from "./Leaderboard.vue";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
-var textArray = ref([]);
+let textArray = ref([]);
+let leaderboardScores = ref([]);
 
 let showTimer = ref(false);
 
@@ -22,6 +24,9 @@ let seconds = ref(150);
 let timeInterval = ref(0);
 let letterCount = ref(1);
 let finalTime = ref(0);
+
+let wordRef = ref([]);
+const textInput = ref(null);
 
 function clickShow() {
   showTimer.value = true;
@@ -46,6 +51,9 @@ function resetValues() {
   showButton.value = false;
   seconds.value = 150;
   arrayCount.value = 0;
+  nextTick(() => {
+    textInput.value.focus();
+  });
 }
 
 function resetValues1() {
@@ -57,11 +65,8 @@ function resetValues1() {
 }
 
 function timerMethod() {
-  console.log(seconds.value);
   seconds.value--;
 }
-
-let wordRef = ref([]);
 
 function finish(event) {
   if (
@@ -76,6 +81,7 @@ function finish(event) {
     showButton.value = true;
     showInformation.value = true;
     showTimer.value = false;
+    leaderboardScores.value.push(finalWpm.value);
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
     }
@@ -159,6 +165,7 @@ let splitWords = computed({
           {{ splitWord }}
         </p>
         <input
+          ref="textInput"
           class="enter-text"
           v-if="showInput"
           @keydown="clearText"
@@ -178,6 +185,7 @@ let splitWords = computed({
       <button @click="clickHome" class="nextRace">Home</button>
     </div>
   </div>
+  <Leaderboard :scores="leaderboardScores"></Leaderboard>
 </template>
 
 <style>
@@ -231,7 +239,7 @@ a:link {
   height: 450px;
   width: 500px;
   background-image: linear-gradient(to right, orange, darkorange);
-  margin: 50px auto 50px auto;
+  margin-top: 50px;
   border-radius: 20px;
   border-color: grey;
   border-style: solid;
