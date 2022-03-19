@@ -17,20 +17,29 @@
   <body>
     <div id="main" class="homepage">
       <div class="header">
-        <div>
-          <a href="index.html"
-            ><img id="header-image" src="./src/assets/type-ski.png"
-          /></a>
+        <div class="headerContainer">
+          <div class="headerImageContainer">
+            <a href="index.html"
+              ><img id="header-image" src="./src/assets/type-ski.png"
+            /></a>
+          </div>
+          <nav class="header-menu">
+            <li><a href="about.html">/ about&nbsp;&nbsp; </a></li>
+            <li><a href="contact.html">/ contact &nbsp;&nbsp;</a></li>
+            <li><a href="#">/ sign in&nbsp;&nbsp; </a></li>
+            <li><a href="#">/ sign up&nbsp;&nbsp; </a></li>
+          </nav>
         </div>
-        <nav class="header-menu">
-          <li><a href="about.html">/ about</a></li>
-          <li><a href="contact.html">/ contact</a></li>
-          <li><a href="#">/ sign in</a></li>
-          <li><a href="#">/ sign up</a></li>
-        </nav>
       </div>
       <div id="app"></div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
+
+<style scoped>
+  .headerContainer {
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>

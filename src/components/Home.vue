@@ -177,7 +177,10 @@ let splitWords = computed({
   <div class="main-content">
     <div v-if="showMain" class="main-menu">
       <img style="height: 70px; width: 100px" src="../assets/type-ski.png" />
-      <a href="#" @click="clickShow"
+      <a
+        href="#"
+        @click="clickShow"
+        style="margin-top: auto; margin-bottom: auto"
         ><p style="margin: 0; font-size: 30px">Take test</p></a
       >
     </div>
@@ -234,18 +237,22 @@ body {
 
 .header {
   width: 100%;
-  height: 100px;
+  height: 130px;
   display: flex;
-  padding: 20px;
   background-image: linear-gradient(to right, orange, darkorange);
-  border-bottom: 3px black solid;
-  font-weight: 300;
+  border-bottom: 1px black solid;
+  font-weight: 600;
   font-family: "Nunito", sans-serif;
 }
 
 #header-image {
-  height: 100px;
-  width: 150px;
+  height: 90px;
+  width: 140px;
+  transform: rotate(5deg);
+}
+
+.headerImageContainer {
+  text-align: center;
 }
 
 .header-menu li {
@@ -255,8 +262,6 @@ body {
 }
 
 .header-menu {
-  margin-top: 70px;
-  margin-left: 20px;
   font-size: 20px;
 }
 
@@ -275,6 +280,7 @@ a:link {
   border-radius: 5px;
   border-color: grey;
   border-style: solid;
+  border-width: 1px;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
   text-align: center;
