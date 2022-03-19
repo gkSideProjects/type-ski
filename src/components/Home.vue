@@ -176,7 +176,7 @@ let splitWords = computed({
   <!-- Vue component comprising of the main functionality of the site -->
   <div class="main-content">
     <div v-if="showMain" class="main-menu">
-      <img style="height: 40px; width: 60px" src="../assets/type-ski.png" />
+      <img style="height: 70px; width: 100px" src="../assets/type-ski.png" />
       <a href="#" @click="clickShow"
         ><p style="margin: 0; font-size: 30px">Take test</p></a
       >
@@ -267,11 +267,12 @@ a:link {
 }
 
 .main-content {
+  box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   height: 450px;
   width: 700px;
   background-image: linear-gradient(to right, orange, darkorange);
   margin-top: 50px;
-  border-radius: 10px;
+  border-radius: 5px;
   border-color: grey;
   border-style: solid;
   font-family: "Nunito", sans-serif;
@@ -318,7 +319,7 @@ a:link {
 }
 
 .practice-div {
-  border-radius: 10px;
+  border-radius: 5px;
   border-color: lightgrey;
   border-style: solid;
   background-color: #f2f2f2;

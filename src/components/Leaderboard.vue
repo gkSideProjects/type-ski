@@ -12,7 +12,7 @@ defineProps({
     <div class="listContainer">
       <transition-group name="list">
         <li class="scores" v-for="(score, index) in scores" :key="score.id">
-          <p class="index2">{{ index }}</p>
+          <p class="index2">{{ index + 1 }}</p>
           <p class="name">usernametesting</p>
           <p class="wpm">{{ score.value }}wpm</p>
         </li>
