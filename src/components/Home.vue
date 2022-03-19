@@ -268,10 +268,10 @@ a:link {
 
 .main-content {
   height: 450px;
-  width: 500px;
+  width: 700px;
   background-image: linear-gradient(to right, orange, darkorange);
   margin-top: 50px;
-  border-radius: 20px;
+  border-radius: 10px;
   border-color: grey;
   border-style: solid;
   font-family: "Nunito", sans-serif;
@@ -318,7 +318,7 @@ a:link {
 }
 
 .practice-div {
-  border-radius: 20px;
+  border-radius: 10px;
   border-color: lightgrey;
   border-style: solid;
   background-color: #f2f2f2;

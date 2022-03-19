@@ -5,7 +5,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="main-content">
+  <div class="main-content lead">
     <header class="title">
       <p>All time high scores</p>
     </header>
@@ -22,6 +22,9 @@ defineProps({
 </template>
 
 <style scoped>
+.main-content.lead {
+  width: 500px;
+}
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
