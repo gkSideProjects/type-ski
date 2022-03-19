@@ -81,11 +81,44 @@ function finish(event) {
     showButton.value = true;
     showInformation.value = true;
     showTimer.value = false;
-    leaderboardScores.value.push(finalWpm.value);
+    const temp = { id: Math.random(), value: finalWpm.value };
+    addScoretoLeaderboard(temp);
+    console.log(leaderboardScores.value);
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
     }
     resetValues1();
+  }
+}
+
+function addScoretoLeaderboard(wpm) {
+  const leaderScore = leaderboardScores.value.length;
+
+  if (leaderScore === 0) {
+    leaderboardScores.value.push(wpm);
+  } else if (leaderScore < 4) {
+    const found = leaderboardScores.value.find(
+      (element) => element.value < wpm.value
+    );
+
+    if (found === undefined) {
+      leaderboardScores.value.push(wpm);
+    } else {
+      const indexFound = leaderboardScores.value.indexOf(found);
+      leaderboardScores.value.splice(indexFound, 0, wpm);
+    }
+  } else {
+    const lowest = leaderboardScores.value[leaderboardScores.value.length - 1];
+    if (lowest.value < wpm.value) {
+      const found = leaderboardScores.value.find(
+        (element) => element.value < wpm.value
+      );
+      const indexFound = leaderboardScores.value.indexOf(found);
+      leaderboardScores.value.pop();
+      setTimeout(() => {
+        leaderboardScores.value.splice(indexFound, 0, wpm);
+      }, 500);
+    }
   }
 }
 
@@ -137,11 +170,6 @@ let splitWords = computed({
     }
   },
 });
-// var app = new Vue({
-//   el: "#main",
-//   data: {},
-// });
-//Vue.component("main-content", {
 </script>
 
 <template>
@@ -181,7 +209,7 @@ let splitWords = computed({
       </div>
     </div>
     <div class="nextRaceDiv" v-if="showButton">
-      <button @click="resetValues" class="nextRace">next race</button>
+      <button @click="resetValues" class="nextRace">Next race</button>
       <button @click="clickHome" class="nextRace">Home</button>
     </div>
   </div>
@@ -193,6 +221,8 @@ let splitWords = computed({
   Author: George Kombostiotis,
   Version: 1.0.0
  */
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
 
 html,
 body {
@@ -209,7 +239,8 @@ body {
   padding: 20px;
   background-image: linear-gradient(to right, orange, darkorange);
   border-bottom: 3px black solid;
-  font-family: Solway, sans-serif;
+  font-weight: 300;
+  font-family: "Nunito", sans-serif;
 }
 
 #header-image {
@@ -243,7 +274,9 @@ a:link {
   border-radius: 20px;
   border-color: grey;
   border-style: solid;
-  font-family: Solway, sans-serif;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
+  text-align: center;
 }
 
 .main-menu {
@@ -323,16 +356,20 @@ a:link {
 }
 
 .nextRaceDiv {
+  display: flex;
+  justify-content: flex-start;
   margin: 30px auto 10px auto;
   width: 85%;
   bottom: 10px;
 }
 
 .nextRace {
+  margin-right: 10px;
   width: 100px;
   height: 40px;
   border-radius: 10px;
-  font-family: Solway, sans-serif;
+  border-style: solid;
+  font-family: "Nunito", sans-serif;
   font-size: 15px;
   background-image: linear-gradient(to right, orange, darkorange);
   font-weight: bold;
