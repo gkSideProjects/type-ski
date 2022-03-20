@@ -2,13 +2,15 @@
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
 import { ref, reactive, computed, nextTick } from "vue";
 import Leaderboard from "./Leaderboard.vue";
-import signupMain from "./SignUp.vue";
 import SignUp from "./SignUp.vue";
+import Header from "./Header.vue";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
 let textArray = ref([]);
 let leaderboardScores = ref([]);
+
+let show = ref(false);
 
 let showTimer = ref(false);
 
@@ -176,55 +178,66 @@ let splitWords = computed({
   },
 });
 
-function popup() {}
+function changeView() {
+  show.value = !show.value;
+}
+
+function hidePop() {
+  if (show.value === true) {
+    show.value = false;
+  }
+}
 </script>
 
 <template>
-  <signup-main></signup-main>
+  <Header @some-event="changeView"></Header>
+  <SignUp :popup="show"></SignUp>
   <!-- Vue component comprising of the main functionality of the site -->
-  <div class="main-content">
-    <div v-if="showMain" class="main-menu">
-      <img style="height: 70px; width: 100px" src="../assets/type-ski.png" />
-      <a
-        href="#"
-        @click="clickShow"
-        style="margin-top: auto; margin-bottom: auto"
-        ><p style="margin: 0; font-size: 30px">Take test</p></a
-      >
-    </div>
-    <div v-if="showPracticeDiv" class="practice-div">
-      <div class="text-border">
-        <p
-          id="text-to-type"
-          v-if="showText"
-          :ref="(el) => (wordRef[i] = el)"
-          class="typeText"
-          v-for="(splitWord, i) in splitWords"
+  <div class="mainContainer" @click="hidePop">
+    <div class="main-content">
+      <div v-if="showMain" class="main-menu">
+        <img style="height: 70px; width: 100px" src="../assets/type-ski.png" />
+        <a
+          href="#"
+          @click="clickShow"
+          style="margin-top: auto; margin-bottom: auto"
+          ><p style="margin: 0; font-size: 30px">Take test</p></a
         >
-          {{ splitWord }}
-        </p>
-        <input
-          ref="textInput"
-          class="enter-text"
-          v-if="showInput"
-          @keydown="clearText"
-          @keyup="finish"
-          v-model="textValue"
-        />
-        <p v-if="showTimer">
-          {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
-        </p>
-        <p id="information" v-if="showInformation">
-          {{ "You typed the text at " + finalWpm + " wpm" }}
-        </p>
+      </div>
+      <div v-if="showPracticeDiv" class="practice-div">
+        <div class="text-border">
+          <p
+            id="text-to-type"
+            v-if="showText"
+            :ref="(el) => (wordRef[i] = el)"
+            class="typeText"
+            v-for="(splitWord, i) in splitWords"
+          >
+            {{ splitWord }}
+          </p>
+          <input
+            ref="textInput"
+            class="enter-text"
+            v-if="showInput"
+            @keydown="clearText"
+            @keyup="finish"
+            v-model="textValue"
+          />
+          <p v-if="showTimer">
+            {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
+          </p>
+          <p id="information" v-if="showInformation">
+            {{ "You typed the text at " + finalWpm + " wpm" }}
+          </p>
+        </div>
+      </div>
+      <div class="nextRaceDiv" v-if="showButton">
+        <button @click="resetValues" class="nextRace">Next race</button>
+        <button @click="clickHome" class="nextRace">Home</button>
       </div>
     </div>
-    <div class="nextRaceDiv" v-if="showButton">
-      <button @click="resetValues" class="nextRace">Next race</button>
-      <button @click="clickHome" class="nextRace">Home</button>
-    </div>
+    <Leaderboard :scores="leaderboardScores"></Leaderboard>
   </div>
-  <Leaderboard :scores="leaderboardScores"></Leaderboard>
 </template>
 
 <style>
@@ -234,6 +247,11 @@ function popup() {}
  */
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
+
+.mainContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
 
 html,
 body {

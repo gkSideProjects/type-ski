@@ -1,15 +1,13 @@
 <script setup>
-import { ref, reactive, computed, nextTick } from "vue";
-let pop = ref(true);
-function popup() {
-  pop.value = !pop.value;
-}
+import { inject, ref } from "vue";
+defineProps({
+  popup: Boolean,
+});
 </script>
 
 <template>
-  <button @click="popup">Test</button>
   <Transition duration="550" name="nested">
-    <div class="signupMain" v-if="pop">
+    <div class="signupMain" v-if="popup">
       <div class="usernameContainer">
         <label>Username:</label><input type="text" />
       </div>
