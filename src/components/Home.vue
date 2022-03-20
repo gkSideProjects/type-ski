@@ -2,6 +2,8 @@
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
 import { ref, reactive, computed, nextTick } from "vue";
 import Leaderboard from "./Leaderboard.vue";
+import signupMain from "./SignUp.vue";
+import SignUp from "./SignUp.vue";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
@@ -150,8 +152,11 @@ let finalWpm = computed(() => {
 });
 
 let wpm = computed(() => {
-  if (seconds.value < 150 && arrayCount.value > 0) {
-    return Math.round((60 / (150 - seconds.value)) * arrayCount.value);
+  let result = Math.round(
+    (60 / (150 - seconds.value - 0.5)) * arrayCount.value
+  );
+  if (seconds.value < 149) {
+    return result;
   } else {
     return 0;
   }
@@ -170,9 +175,12 @@ let splitWords = computed({
     }
   },
 });
+
+function popup() {}
 </script>
 
 <template>
+  <signup-main></signup-main>
   <!-- Vue component comprising of the main functionality of the site -->
   <div class="main-content">
     <div v-if="showMain" class="main-menu">
