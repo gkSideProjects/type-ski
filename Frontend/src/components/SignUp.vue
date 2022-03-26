@@ -1,19 +1,53 @@
 <script setup>
+import { ref } from "vue";
+import AppVue from "../App.vue";
+
+const API_URL = "http://localhost:3001";
+
 defineProps({
   popup: Boolean,
 });
+
+let username = ref("");
+let password = ref("");
+
+function createUser() {
+  const user = {
+    username: username.value,
+    password: password.value,
+  };
+
+  console.log(JSON.stringify(user));
+
+  fetch(API_URL + "/createUser", {
+    method: "POST",
+    body: JSON.stringify(user),
+    headers: {
+      "Content-type": "application/json",
+    },
+  }).then(function (response) {
+    if (response.ok) {
+      response.json().then((json) => {
+        console.log(json);
+        alert("User " + json.username + " created!");
+      });
+    }
+  });
+}
 </script>
 
 <template>
   <Transition duration="400" name="nested">
     <div class="signupMain" v-if="popup">
       <div class="usernameContainer">
-        <label>Username:</label><input type="text" />
+        <label>Username:</label><input type="text" v-model="username" />
       </div>
       <div class="passwordContainer">
-        <label>Password:</label><input type="text" />
+        <label>Password:</label><input type="text" v-model="password" />
       </div>
-      <div class="buttonContainer"><button>Create</button></div>
+      <div class="buttonContainer">
+        <button @click="createUser">Create</button>
+      </div>
     </div>
   </Transition>
 </template>
