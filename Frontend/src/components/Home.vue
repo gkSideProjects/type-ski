@@ -4,6 +4,7 @@ import { ref, reactive, computed, nextTick } from "vue";
 import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
+import { hash } from "bcryptjs";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
@@ -205,6 +206,34 @@ function hidePop() {
   show.value = false;
   show2.value = false;
 }
+
+const API_URL = "http://localhost:3001";
+
+async function createUser(username, password) {
+  const hashedPassword = await hash(password, 10);
+
+  const user = {
+    username: username,
+    password: hashedPassword,
+  };
+
+  console.log(JSON.stringify(user));
+
+  fetch(API_URL + "/createUser", {
+    method: "POST",
+    body: JSON.stringify(user),
+    headers: {
+      "Content-type": "application/json",
+    },
+  }).then(function (response) {
+    if (response.ok) {
+      response.json().then((json) => {
+        console.log(json);
+        alert("User " + json.username + " created!");
+      });
+    }
+  });
+}
 </script>
 
 <template>
@@ -214,9 +243,11 @@ function hidePop() {
       <button @click="logIn">Login</button>
     </div>
   </SignUp>
-  <SignUp :popup="show">
+  <SignUp v-slot="slotProps" :popup="show">
     <div class="buttonContainer">
-      <button @click="createUser">Create</button>
+      <button @click="createUser(slotProps.username, slotProps.password)">
+        Create
+      </button>
     </div>
   </SignUp>
   <!-- Vue component comprising of the main functionality of the site -->
@@ -331,9 +362,6 @@ a:link {
   background-image: linear-gradient(to right, orange, darkorange);
   margin-top: 50px;
   border-radius: 5px;
-  border-color: grey;
-  border-style: solid;
-  border-width: 1px;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
   text-align: center;

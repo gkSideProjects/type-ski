@@ -2,38 +2,12 @@
 import { ref } from "vue";
 import AppVue from "../App.vue";
 
-const API_URL = "http://localhost:3001";
-
 defineProps({
   popup: Boolean,
 });
 
 let username = ref("");
 let password = ref("");
-
-function createUser() {
-  const user = {
-    username: username.value,
-    password: password.value,
-  };
-
-  console.log(JSON.stringify(user));
-
-  fetch(API_URL + "/createUser", {
-    method: "POST",
-    body: JSON.stringify(user),
-    headers: {
-      "Content-type": "application/json",
-    },
-  }).then(function (response) {
-    if (response.ok) {
-      response.json().then((json) => {
-        console.log(json);
-        alert("User " + json.username + " created!");
-      });
-    }
-  });
-}
 </script>
 
 <template>
@@ -45,7 +19,7 @@ function createUser() {
       <div class="passwordContainer">
         <label>Password:</label><input type="password" v-model="password" />
       </div>
-      <slot></slot>
+      <slot :username="username" :password="password"></slot>
     </div>
   </Transition>
 </template>
@@ -72,7 +46,6 @@ function createUser() {
   position: absolute;
   font-weight: 600;
   font-family: "Nunito", sans-serif;
-  border: solid grey 1px;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   width: 300px;
