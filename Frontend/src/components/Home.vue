@@ -11,6 +11,7 @@ let textArray = ref([]);
 let leaderboardScores = ref([]);
 
 let show = ref(false);
+let show2 = ref(false);
 
 let showTimer = ref(false);
 
@@ -178,18 +179,46 @@ let splitWords = computed({
   },
 });
 
-function changeView() {
-  show.value = !show.value;
+async function changeView() {
+  if (show2.value) {
+    await changeView2();
+    setTimeout(() => {
+      show.value = !show.value;
+    }, 300);
+  } else {
+    show.value = !show.value;
+  }
+}
+
+async function changeView2() {
+  if (show.value) {
+    await changeView();
+    setTimeout(() => {
+      show2.value = !show2.value;
+    }, 300);
+  } else {
+    show2.value = !show2.value;
+  }
 }
 
 function hidePop() {
   show.value = false;
+  show2.value = false;
 }
 </script>
 
 <template>
-  <Header @some-event="changeView"></Header>
-  <SignUp :popup="show"></SignUp>
+  <Header @some-event="changeView" @another-event="changeView2"></Header>
+  <SignUp :popup="show2" style="right: calc(50% - 180px)">
+    <div class="buttonContainer">
+      <button @click="logIn">Login</button>
+    </div>
+  </SignUp>
+  <SignUp :popup="show">
+    <div class="buttonContainer">
+      <button @click="createUser">Create</button>
+    </div>
+  </SignUp>
   <!-- Vue component comprising of the main functionality of the site -->
   <div class="mainContainer" @click="hidePop">
     <div class="main-content">
@@ -404,5 +433,21 @@ a:link {
   font-size: 15px;
   background-image: linear-gradient(to right, orange, darkorange);
   font-weight: bold;
+}
+
+button {
+  margin-top: 5px;
+  width: 100px;
+  height: 20px;
+  border-radius: 3px;
+  border: 1px black solid;
+  font-family: "Nunito", sans-serif;
+  font-size: 10px;
+  background-image: linear-gradient(to right, orange, darkorange);
+  font-weight: bold;
+}
+
+.buttonContainer {
+  text-align: center;
 }
 </style>

@@ -43,11 +43,9 @@ function createUser() {
         <label>Username:</label><input type="text" v-model="username" />
       </div>
       <div class="passwordContainer">
-        <label>Password:</label><input type="text" v-model="password" />
+        <label>Password:</label><input type="password" v-model="password" />
       </div>
-      <div class="buttonContainer">
-        <button @click="createUser">Create</button>
-      </div>
+      <slot></slot>
     </div>
   </Transition>
 </template>
@@ -59,7 +57,7 @@ function createUser() {
 }
 /* delay leave of parent element */
 .nested-leave-active {
-  transition-delay: 0.25s;
+  transition-delay: 0;
 }
 
 .nested-enter-from,
@@ -70,7 +68,7 @@ function createUser() {
 
 .signupMain {
   top: 140px;
-  right: 30%;
+  right: calc(50% - 300px);
   position: absolute;
   font-weight: 600;
   font-family: "Nunito", sans-serif;
@@ -94,18 +92,6 @@ label {
   float: left;
 }
 
-button {
-  margin-top: 5px;
-  width: 100px;
-  height: 20px;
-  border-radius: 3px;
-  border: 1px black solid;
-  font-family: "Nunito", sans-serif;
-  font-size: 10px;
-  background-image: linear-gradient(to right, orange, darkorange);
-  font-weight: bold;
-}
-
 .usernameContainer {
   margin-top: 20px;
   text-align: right;
@@ -115,9 +101,5 @@ button {
 .passwordContainer {
   text-align: right;
   margin-right: 20px;
-}
-
-.buttonContainer {
-  text-align: center;
 }
 </style>
