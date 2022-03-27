@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import AppVue from "../App.vue";
 
 defineProps({
   popup: Boolean,

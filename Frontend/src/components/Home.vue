@@ -1,6 +1,6 @@
 <script setup>
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
-import { ref, reactive, computed, nextTick } from "vue";
+import { ref, computed, nextTick } from "vue";
 import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
@@ -234,13 +234,37 @@ async function createUser(username, password) {
     }
   });
 }
+
+async function logIn(username, password) {
+  const user = {
+    username: username,
+    password: password,
+  };
+
+  fetch(API_URL + "/login", {
+    method: "POST",
+    body: JSON.stringify(user),
+    headers: {
+      "Content-type": "application/json",
+    },
+  }).then(function (response) {
+    if (response.ok) {
+      response.json().then((json) => {
+        console.log(json);
+        alert(json.message);
+      });
+    }
+  });
+}
 </script>
 
 <template>
   <Header @some-event="changeView" @another-event="changeView2"></Header>
-  <SignUp :popup="show2" style="right: calc(50% - 180px)">
+  <SignUp v-slot="slotProps" :popup="show2" style="right: calc(50% - 180px)">
     <div class="buttonContainer">
-      <button @click="logIn">Login</button>
+      <button @click="logIn(slotProps.username, slotProps.password)">
+        Login
+      </button>
     </div>
   </SignUp>
   <SignUp v-slot="slotProps" :popup="show">
@@ -331,7 +355,7 @@ body {
 
 #header-image {
   height: 90px;
-  width: 140px;
+  width: 155px;
   transform: rotate(5deg);
 }
 

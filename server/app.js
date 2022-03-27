@@ -1,8 +1,8 @@
-const { application } = require("express");
-const express = require("express");
+import express from "express";
+import { hash, compare } from "bcryptjs";
 const app = express();
 const port = 3001;
-const cors = require("cors");
+import cors from "cors";
 
 app.use(express.json());
 
@@ -29,6 +29,23 @@ const db = pgp(cn);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+app.post("/login", (req, res) => {
+  db.any("select * from users where username = $1", [req.body.username])
+    .then(async (data) => {
+      const valid = await compare(req.body.password, data[0].password);
+      if (!valid) {
+        res.status(401);
+        res.json({ error: "wrong password" });
+      } else {
+        res.status(200);
+        res.json({ message: `${data[0].username} successfully logged in` });
+      }
+    })
+    .catch((error) => {
+      console.log("ERROR: ", error);
+    });
 });
 
 app.post("/createUser", async (req, res) => {
