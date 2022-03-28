@@ -1,11 +1,14 @@
 import express from "express";
-import { hash, compare } from "bcryptjs";
+import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
+import "dotenv/config";
+
 const app = express();
 const port = 3001;
 import cors from "cors";
 
 app.use(express.json());
-
+console.log(process.env.ACCESS_TOKEN);
 //cors
 app.use(
   cors({
@@ -39,6 +42,14 @@ app.post("/login", (req, res) => {
         res.status(401);
         res.json({ error: "wrong password" });
       } else {
+        const token = sign(
+          { username: req.body.username },
+          process.env.ACCESS_TOKEN,
+          {
+            expiresIn: "15m",
+          }
+        );
+        console.log(token);
         res.status(200);
         res.json({ message: `${data[0].username} successfully logged in` });
       }
