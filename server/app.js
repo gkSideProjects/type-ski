@@ -8,7 +8,7 @@ const port = 3001;
 import cors from "cors";
 
 app.use(express.json());
-console.log(process.env.ACCESS_TOKEN);
+
 //cors
 app.use(
   cors({
@@ -49,9 +49,10 @@ app.post("/login", (req, res) => {
             expiresIn: "15m",
           }
         );
-        console.log(token);
-        res.status(200);
-        res.json({ message: `${data[0].username} successfully logged in` });
+        return res
+          .cookie("815", token, { httpOnly: true })
+          .status(200)
+          .json({ message: "login successful" });
       }
     })
     .catch((error) => {

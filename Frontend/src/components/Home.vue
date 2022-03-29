@@ -250,8 +250,8 @@ async function logIn(username, password) {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
-        console.log(json);
         alert(json.message);
+        console.log(document.cookie);
       });
     }
   });
@@ -355,7 +355,7 @@ body {
 
 #header-image {
   height: 90px;
-  width: 155px;
+  width: 150px;
   transform: rotate(5deg);
 }
 
