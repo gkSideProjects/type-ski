@@ -5,6 +5,7 @@ import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
 import { hash } from "bcryptjs";
+import { setAccessToken } from "../accessToken";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
@@ -250,8 +251,9 @@ async function logIn(username, password) {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
-        alert(json.message);
+        alert(json.accessToken);
         console.log(document.cookie);
+        setAccessToken(json.accessToken);
       });
     }
   });

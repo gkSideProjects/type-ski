@@ -1,6 +1,6 @@
 import express from "express";
 import { compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
+import { createRefreshToken, createAccessToken } from "./auth";
 import "dotenv/config";
 
 const app = express();
@@ -42,17 +42,12 @@ app.post("/login", (req, res) => {
         res.status(401);
         res.json({ error: "wrong password" });
       } else {
-        const token = sign(
-          { username: req.body.username },
-          process.env.ACCESS_TOKEN,
-          {
-            expiresIn: "15m",
-          }
-        );
-        return res
-          .cookie("815", token, { httpOnly: true })
-          .status(200)
-          .json({ message: "login successful" });
+        const access = createAccessToken(req);
+        const refresh = createRefreshToken(req);
+        res.cookie("815", refresh, { httpOnly: true });
+        res.status(200);
+        res.send({ accessToken: access });
+        return res;
       }
     })
     .catch((error) => {
