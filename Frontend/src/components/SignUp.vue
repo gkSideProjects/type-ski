@@ -1,8 +1,16 @@
 <script setup>
-import { ref } from "vue";
+import { nextTick, onUpdated, ref } from "vue";
 
-defineProps({
+const props = defineProps({
   popup: Boolean,
+});
+
+const usr = ref(null);
+
+onUpdated(() => {
+  if (props.popup) {
+    usr.value.focus();
+  }
 });
 
 let username = ref("");
@@ -13,7 +21,8 @@ let password = ref("");
   <Transition duration="400" name="nested">
     <div class="signupMain" v-if="popup">
       <div class="usernameContainer">
-        <label>Username:</label><input type="text" v-model="username" />
+        <label>Username:</label
+        ><input ref="usr" type="text" v-model="username" />
       </div>
       <div class="passwordContainer">
         <label>Password:</label><input type="password" v-model="password" />

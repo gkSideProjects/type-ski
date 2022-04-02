@@ -5,7 +5,7 @@ import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
 import { hash } from "bcryptjs";
-import { setAccessToken } from "../accessToken";
+import { setAccessToken, getAccessToken } from "../accessToken";
 
 /* Array that is filled by the chosen text from 'arrayOfTests' after a split of
 the text. Each word has it's own location in the array */
@@ -60,6 +60,7 @@ function resetValues() {
   arrayCount.value = 0;
   nextTick(() => {
     textInput.value.focus();
+    console.log(textInput.value);
   });
 }
 
@@ -90,7 +91,6 @@ function finish(event) {
     showTimer.value = false;
     const temp = { id: Math.random(), value: finalWpm.value };
     addScoretoLeaderboard(temp);
-    console.log(leaderboardScores.value);
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
     }
@@ -98,7 +98,18 @@ function finish(event) {
   }
 }
 
+function isLoggedIn() {
+  if (getAccessToken() == "") {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function addScoretoLeaderboard(wpm) {
+  if (!isLoggedIn()) {
+    return;
+  }
   const leaderScore = leaderboardScores.value.length;
 
   if (leaderScore === 0) {
@@ -218,8 +229,6 @@ async function createUser(username, password) {
     password: hashedPassword,
   };
 
-  console.log(JSON.stringify(user));
-
   fetch(API_URL + "/createUser", {
     method: "POST",
     body: JSON.stringify(user),
@@ -229,7 +238,6 @@ async function createUser(username, password) {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
-        console.log(json);
         alert("User " + json.username + " created!");
       });
     }
