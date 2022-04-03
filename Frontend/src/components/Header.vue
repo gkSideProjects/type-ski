@@ -4,20 +4,18 @@
   <div class="header">
     <div class="headerContainer">
       <div class="headerImageContainer">
-        <a href="index.html"
-          ><img id="header-image" src="../assets/type-ski.png"
-        /></a>
+        <a href="#"><img id="header-image" src="../assets/type-ski.png" /></a>
       </div>
       <nav class="header-menu">
         <li><a href="#">/ about&nbsp;&nbsp; </a></li>
         <li><a href="#">/ contact &nbsp;&nbsp;</a></li>
         <li>
-          <a href="#" @click.prevent="$emit('anotherEvent')"
+          <a href="#" @click.prevent="$emit('signinEvent')"
             >/ sign in&nbsp;&nbsp;
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="$emit('someEvent')"
+          <a href="#" @click.prevent="$emit('signupEvent')"
             >/ sign up&nbsp;&nbsp;
           </a>
         </li>

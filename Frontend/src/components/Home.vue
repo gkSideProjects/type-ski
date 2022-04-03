@@ -12,8 +12,10 @@ the text. Each word has it's own location in the array */
 let textArray = ref([]);
 let leaderboardScores = ref([]);
 
-let show = ref(false);
-let show2 = ref(false);
+let showSignup = ref(false);
+let showSignin = ref(false);
+
+let docState = ref("");
 
 let showTimer = ref(false);
 
@@ -192,31 +194,49 @@ let splitWords = computed({
   },
 });
 
-async function changeView() {
-  if (show2.value) {
-    await changeView2();
-    setTimeout(() => {
-      show.value = !show.value;
-    }, 300);
+async function clickSignup() {
+  if (rightStyle.value === signIn) {
+    isAcross.value = true;
+    right.value = true;
+    rightStyle.value = signUp;
+    actionHeader.value = "Sign up";
   } else {
-    show.value = !show.value;
+    if (showSignin.value) {
+      hidePop();
+      return;
+    }
+    isAcross.value = false;
+    rightStyle.value = signUp;
+    actionHeader.value = "Sign up";
+    showSignin.value = !showSignin.value;
   }
 }
 
-async function changeView2() {
-  if (show.value) {
-    await changeView();
-    setTimeout(() => {
-      show2.value = !show2.value;
-    }, 300);
+async function clickSignin() {
+  if (rightStyle.value === signUp) {
+    isAcross.value = true;
+    left.value = true;
+    rightStyle.value = signIn;
+    actionHeader.value = "Sign In";
   } else {
-    show2.value = !show2.value;
+    if (showSignin.value) {
+      hidePop();
+      return;
+    }
+    isAcross.value = false;
+    rightStyle.value = signIn;
+    actionHeader.value = "Sign In";
+    showSignin.value = !showSignin.value;
   }
 }
 
 function hidePop() {
-  show.value = false;
-  show2.value = false;
+  rightStyle.value = "";
+  transitionClass.value = "nested";
+  showSignin.value = false;
+
+  actionHeader.value = "";
+  isAcross.value = false;
 }
 
 const API_URL = "http://localhost:3001";
@@ -244,6 +264,14 @@ async function createUser(username, password) {
   });
 }
 
+function middleware(username, password) {
+  if (actionHeader.value === "Sign In") {
+    logIn(username, password);
+  } else if (actionHeader.value === "Sign up") {
+    createUser(username, password);
+  }
+}
+
 async function logIn(username, password) {
   const user = {
     username: username,
@@ -266,24 +294,33 @@ async function logIn(username, password) {
     }
   });
 }
+
+let transitionClass = ref("nested");
+let rightStyle = ref("");
+let signUp = "calc(50% - 255px)";
+let signIn = "calc(50% - 150px)";
+let left = ref(false);
+let right = ref(false);
+let actionHeader = ref("");
+let isAcross = ref("");
 </script>
 
 <template>
-  <Header @some-event="changeView" @another-event="changeView2"></Header>
-  <SignUp v-slot="slotProps" :popup="show2" style="right: calc(50% - 180px)">
+  <Header @signin-event="clickSignin" @signup-event="clickSignup"></Header>
+  <SignUp
+    :class="{ moveRight: right, moveLeft: left }"
+    :style="{ right: rightStyle }"
+    v-slot="slotProps"
+    :popup="showSignin"
+    :isAcross="isAcross"
+  >
     <div class="buttonContainer">
-      <button @click="logIn(slotProps.username, slotProps.password)">
-        Login
+      <button @click="middleware(slotProps.username, slotProps.password)">
+        {{ actionHeader }}
       </button>
     </div>
   </SignUp>
-  <SignUp v-slot="slotProps" :popup="show">
-    <div class="buttonContainer">
-      <button @click="createUser(slotProps.username, slotProps.password)">
-        Create
-      </button>
-    </div>
-  </SignUp>
+
   <!-- Vue component comprising of the main functionality of the site -->
   <div class="mainContainer" @click="hidePop">
     <div class="main-content">
@@ -337,8 +374,16 @@ async function logIn(username, password) {
   Author: George Kombostiotis,
   Version: 1.0.0
  */
-
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
+
+.moveRight {
+  transition: 0.7s;
+}
+
+.moveLeft {
+  transition: 0.5s;
+  transform: translate(0px);
+}
 
 .mainContainer {
   display: flex;
@@ -498,10 +543,9 @@ a:link {
 }
 
 button {
-  margin-top: 5px;
-  width: 100px;
+  width: 172px;
   height: 20px;
-  border-radius: 3px;
+  border-radius: 5px;
   border: 1px black solid;
   font-family: "Nunito", sans-serif;
   font-size: 10px;
@@ -510,6 +554,7 @@ button {
 }
 
 .buttonContainer {
+  width: 100%;
   text-align: center;
 }
 </style>

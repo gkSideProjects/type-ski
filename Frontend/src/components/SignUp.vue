@@ -1,15 +1,24 @@
 <script setup>
-import { nextTick, onUpdated, ref } from "vue";
+import { onUpdated, ref } from "vue";
 
 const props = defineProps({
   popup: Boolean,
+  transitionClass: String,
+  isAcross: Boolean,
 });
 
 const usr = ref(null);
 
 onUpdated(() => {
   if (props.popup) {
-    usr.value.focus();
+    if (props.isAcross) {
+      usr.value.blur();
+      setTimeout(() => {
+        usr.value.focus();
+      }, 500);
+    } else {
+      usr.value.focus();
+    }
   }
 });
 
@@ -18,14 +27,18 @@ let password = ref("");
 </script>
 
 <template>
-  <Transition duration="400" name="nested">
+  <Transition duration="500" name="nested">
     <div class="signupMain" v-if="popup">
       <div class="usernameContainer">
-        <label>Username:</label
-        ><input ref="usr" type="text" v-model="username" />
+        <input
+          placeholder="Username"
+          ref="usr"
+          type="text"
+          v-model="username"
+        />
       </div>
       <div class="passwordContainer">
-        <label>Password:</label><input type="password" v-model="password" />
+        <input placeholder="Password" type="password" v-model="password" />
       </div>
       <slot :username="username" :password="password"></slot>
     </div>
@@ -37,9 +50,10 @@ let password = ref("");
 .nested-leave-active {
   transition: all 0.3s ease-in-out;
 }
+
 /* delay leave of parent element */
 .nested-leave-active {
-  transition-delay: 0;
+  transition-delay: 0s;
 }
 
 .nested-enter-from,
@@ -50,37 +64,38 @@ let password = ref("");
 
 .signupMain {
   top: 140px;
-  right: calc(50% - 300px);
+  right: calc(50% - 255px);
   position: absolute;
   font-weight: 600;
   font-family: "Nunito", sans-serif;
   border-radius: 5px;
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
-  width: 300px;
-  height: 100px;
+  width: 200px;
+  height: 105px;
   background-image: linear-gradient(to right, orange, darkorange);
 }
 
 input {
-  width: 120px;
-  height: 15px;
-  border-radius: 3px;
+  font-family: "Nunito", sans-serif;
+  padding: 2px 2px 2px 10px;
+  height: 20px;
+  border-radius: 5px;
   border: solid gray 1px;
 }
 
-label {
-  margin-left: 15px;
-  float: left;
+input:focus {
+  outline: none;
+  border-color: black;
 }
 
 .usernameContainer {
-  margin-top: 20px;
-  text-align: right;
-  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-align: center;
 }
 
 .passwordContainer {
-  text-align: right;
-  margin-right: 20px;
+  text-align: center;
+  margin-bottom: 5px;
 }
 </style>
