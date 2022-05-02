@@ -24,6 +24,7 @@ defineProps({
 <style scoped>
 .main-content.lead {
   width: 500px;
+  border-radius: 15px;
 }
 .list-enter-active,
 .list-leave-active {

@@ -306,26 +306,28 @@ let isAcross = ref("");
 </script>
 
 <template>
-  <Header @signin-event="clickSignin" @signup-event="clickSignup"></Header>
-  <SignUp
-    :class="{ moveRight: right, moveLeft: left }"
-    :style="{ right: rightStyle }"
-    v-slot="slotProps"
-    :popup="showSignin"
-    :isAcross="isAcross"
-  >
-    <div class="buttonContainer">
-      <button @click="middleware(slotProps.username, slotProps.password)">
-        {{ actionHeader }}
-      </button>
-    </div>
-  </SignUp>
-
   <!-- Vue component comprising of the main functionality of the site -->
   <div class="mainContainer" @click="hidePop">
-    <div class="main-content">
+    <Header @signin-event="clickSignin" @signup-event="clickSignup"></Header>
+    <SignUp
+      :class="{ moveRight: right, moveLeft: left }"
+      :style="{ right: rightStyle }"
+      v-slot="slotProps"
+      :popup="showSignin"
+      :isAcross="isAcross"
+    >
+      <div class="buttonContainer">
+        <button @click="middleware(slotProps.username, slotProps.password)">
+          {{ actionHeader }}
+        </button>
+      </div>
+    </SignUp>
+    <div class="main-content main-content-radius">
       <div v-if="showMain" class="main-menu">
-        <img style="height: 70px; width: 100px" src="../assets/type-ski.png" />
+        <img
+          style="height: 66px; width: 100px; transform: rotate(5deg)"
+          src="../assets/type-ski.png"
+        />
         <a
           href="#"
           @click="clickShow"
@@ -386,6 +388,11 @@ let isAcross = ref("");
 }
 
 .mainContainer {
+  background-color: rgb(251, 251, 251);
+  flex-wrap: wrap;
+  background-image: url("../assets/keyboardcablenew.jpg");
+  background-repeat: no-repeat;
+  background-size: 800px, 500px;
   display: flex;
   justify-content: space-evenly;
 }
@@ -393,18 +400,15 @@ let isAcross = ref("");
 html,
 body {
   margin: 0;
-  max-width: 100%;
+  height: 100%;
   min-width: 500px;
   overflow-x: hidden;
 }
 
 .header {
+  height: 272px;
   width: 100%;
-  height: 130px;
   display: flex;
-  background-image: linear-gradient(to right, orange, darkorange);
-  border-bottom: 1px black solid;
-  font-weight: 600;
   font-family: "Nunito", sans-serif;
 }
 
@@ -415,6 +419,7 @@ body {
 }
 
 .headerImageContainer {
+  padding-bottom: 5px;
   text-align: center;
 }
 
@@ -434,13 +439,16 @@ a:link {
   color: inherit;
 }
 
+.main-content-radius {
+  border-radius: 30px 30px 30px 30px;
+  border: solid 2px darkblue;
+}
+
 .main-content {
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   height: 450px;
-  width: 700px;
-  background-image: linear-gradient(to right, orange, darkorange);
-  margin-top: 50px;
-  border-radius: 5px;
+  width: 800px;
+  margin: 0;
   font-family: "Nunito", sans-serif;
   font-weight: 600;
   text-align: center;
