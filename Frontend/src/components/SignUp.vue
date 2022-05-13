@@ -63,7 +63,10 @@ let password = ref("");
 }
 
 .signupMain {
-  top: 140px;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(1px);
+  top: 230px;
   right: calc(50% - 255px);
   position: absolute;
   font-weight: 600;
@@ -72,7 +75,6 @@ let password = ref("");
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   width: 200px;
   height: 105px;
-  background-image: linear-gradient(to right, orange, darkorange);
 }
 
 input {

@@ -306,8 +306,8 @@ let isAcross = ref("");
 </script>
 
 <template>
-  <!-- Vue component comprising of the main functionality of the site -->
-  <div class="mainContainer" @click="hidePop">
+  <!-- Vue component comprising of the main functionality of the site @click="hidePop" -->
+  <div class="mainContainer">
     <Header @signin-event="clickSignin" @signup-event="clickSignup"></Header>
     <SignUp
       :class="{ moveRight: right, moveLeft: left }"
@@ -322,49 +322,51 @@ let isAcross = ref("");
         </button>
       </div>
     </SignUp>
-    <div class="main-content main-content-radius">
-      <div v-if="showMain" class="main-menu">
-        <img
-          style="height: 66px; width: 100px; transform: rotate(5deg)"
-          src="../assets/type-ski.png"
-        />
-        <a
-          href="#"
-          @click="clickShow"
-          style="margin-top: auto; margin-bottom: auto"
-          ><p style="margin: 0; font-size: 30px">Take test</p></a
-        >
-      </div>
-      <div v-if="showPracticeDiv" class="practice-div">
-        <div class="text-border">
-          <p
-            id="text-to-type"
-            v-if="showText"
-            :ref="(el) => (wordRef[i] = el)"
-            class="typeText"
-            v-for="(splitWord, i) in splitWords"
-          >
-            {{ splitWord }}
-          </p>
-          <input
-            ref="textInput"
-            class="enter-text"
-            v-if="showInput"
-            @keydown="clearText"
-            @keyup="finish"
-            v-model="textValue"
+    <div class="for-border">
+      <div class="main-content main-content-radius">
+        <div v-if="showMain" class="main-menu">
+          <img
+            style="height: 66px; width: 100px; transform: rotate(5deg)"
+            src="../assets/type-ski.png"
           />
-          <p v-if="showTimer">
-            {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
-          </p>
-          <p id="information" v-if="showInformation">
-            {{ "You typed the text at " + finalWpm + " wpm" }}
-          </p>
+          <a
+            href="#"
+            @click="clickShow"
+            style="margin-top: auto; margin-bottom: auto"
+            ><p style="margin: 0; font-size: 30px">Take test</p></a
+          >
         </div>
-      </div>
-      <div class="nextRaceDiv" v-if="showButton">
-        <button @click="resetValues" class="nextRace">Next race</button>
-        <button @click="clickHome" class="nextRace">Home</button>
+        <div v-if="showPracticeDiv" class="practice-div">
+          <div class="text-border">
+            <p
+              id="text-to-type"
+              v-if="showText"
+              :ref="(el) => (wordRef[i] = el)"
+              class="typeText"
+              v-for="(splitWord, i) in splitWords"
+            >
+              {{ splitWord }}
+            </p>
+            <input
+              ref="textInput"
+              class="enter-text"
+              v-if="showInput"
+              @keydown="clearText"
+              @keyup="finish"
+              v-model="textValue"
+            />
+            <p v-if="showTimer">
+              {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
+            </p>
+            <p id="information" v-if="showInformation">
+              {{ "You typed the text at " + finalWpm + " wpm" }}
+            </p>
+          </div>
+        </div>
+        <div class="nextRaceDiv" v-if="showButton">
+          <button @click="resetValues" class="nextRace">Next race</button>
+          <button @click="clickHome" class="nextRace">Home</button>
+        </div>
       </div>
     </div>
     <Leaderboard :scores="leaderboardScores"></Leaderboard>
@@ -377,6 +379,31 @@ let isAcross = ref("");
   Version: 1.0.0
  */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
+
+@keyframes bg-change {
+  0%,
+  100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(-45deg);
+  }
+}
+
+.for-border {
+  background-color: #14c2cc;
+  background-image: radial-gradient(
+      circle farthest-side at top right,
+      transparent,
+      #0d64ff
+    ),
+    radial-gradient(ellipse farthest-corner at 0% 100%, transparent, #ff00a0);
+  animation: bg-change 5s infinite;
+  padding: 12px;
+  display: flex;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px 5px rgb(0 0 0 / 20%);
+}
 
 .moveRight {
   transition: 0.7s;
@@ -440,13 +467,16 @@ a:link {
 }
 
 .main-content-radius {
+  /* animation: Border 10s infinite;
   border-radius: 30px 30px 30px 30px;
-  border: solid 2px darkblue;
+  border: solid 4px; */
 }
 
 .main-content {
-  box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
-  height: 450px;
+  box-shadow: 0px 0px 5px 2px rgb(0 0 0 / 20%);
+  background-color: white;
+  border-radius: 8px;
+  height: 400px;
   width: 800px;
   margin: 0;
   font-family: "Nunito", sans-serif;
@@ -557,7 +587,6 @@ button {
   border: 1px black solid;
   font-family: "Nunito", sans-serif;
   font-size: 10px;
-  background-image: linear-gradient(to right, orange, darkorange);
   font-weight: bold;
 }
 

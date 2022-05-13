@@ -23,6 +23,7 @@ defineProps({
 
 <style scoped>
 .main-content.lead {
+  box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   width: 500px;
   border-radius: 15px;
 }
