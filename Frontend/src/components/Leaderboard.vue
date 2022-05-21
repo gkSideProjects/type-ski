@@ -13,7 +13,7 @@ defineProps({
       <transition-group name="list">
         <li class="scores" v-for="(score, index) in scores" :key="score.id">
           <p class="index2">{{ index + 1 }}</p>
-          <p class="name">usernametesting</p>
+          <p class="name">{{ score.id }}</p>
           <p class="wpm">{{ score.value }}wpm</p>
         </li>
       </transition-group>
@@ -25,7 +25,7 @@ defineProps({
 .main-content.lead {
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   width: 500px;
-  border-radius: 15px;
+  border-radius: 8px;
 }
 .list-enter-active,
 .list-leave-active {
@@ -56,12 +56,13 @@ p {
 }
 
 .index2 {
+  width: 10px;
   padding-left: 20px;
   padding-right: 5px;
 }
 
 .scores .name {
-  margin-left: 120px;
+  margin-left: 30%;
 }
 
 .scores .wpm {

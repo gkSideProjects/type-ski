@@ -1,6 +1,6 @@
 <script setup>
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
-import { ref, computed, nextTick } from "vue";
+import { onMounted, ref, computed, nextTick } from "vue";
 import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
@@ -14,6 +14,8 @@ let leaderboardScores = ref([]);
 
 let showSignup = ref(false);
 let showSignin = ref(false);
+
+let userProfile = ref("sign in");
 
 let docState = ref("");
 
@@ -36,6 +38,26 @@ let finalTime = ref(0);
 
 let wordRef = ref([]);
 const textInput = ref(null);
+
+onMounted(() => {
+  fetch(API_URL + "/getTopTen", {
+    method: "POST",
+    headers: {
+      "Content-type": "applciation/json",
+    },
+  }).then(function (response) {
+    if (response.ok) {
+      response.json().then((json) => {
+        for (let x of json) {
+          let newValue = { id: x.owner, value: x.wpm };
+          leaderboardScores.value.push(newValue);
+        }
+      });
+    } else {
+      alert("failed");
+    }
+  });
+});
 
 function clickShow() {
   showTimer.value = true;
@@ -93,6 +115,7 @@ function finish(event) {
     showTimer.value = false;
     const temp = { id: Math.random(), value: finalWpm.value };
     addScoretoLeaderboard(temp);
+    sendResultToDB();
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
     }
@@ -116,7 +139,7 @@ function addScoretoLeaderboard(wpm) {
 
   if (leaderScore === 0) {
     leaderboardScores.value.push(wpm);
-  } else if (leaderScore < 4) {
+  } else if (leaderScore < 10) {
     const found = leaderboardScores.value.find(
       (element) => element.value < wpm.value
     );
@@ -241,14 +264,37 @@ function hidePop() {
 
 const API_URL = "http://localhost:3001";
 
+async function sendResultToDB() {
+  if (isLoggedIn()) {
+    const result = {
+      username: "user4",
+      wpm: "100",
+      time_of: Date(),
+    };
+    fetch(API_URL + "/sendResult", {
+      method: "POST",
+      body: JSON.stringify(result),
+      headers: {
+        "Content-type": "application/json",
+      },
+    }).then(function (response) {
+      if (response.ok) {
+        response.json().then((json) => {
+          alert(json);
+        });
+      } else {
+        alert("failed");
+      }
+    });
+  }
+}
+
 async function createUser(username, password) {
   const hashedPassword = await hash(password, 10);
-
   const user = {
     username: username,
     password: hashedPassword,
   };
-
   fetch(API_URL + "/createUser", {
     method: "POST",
     body: JSON.stringify(user),
@@ -259,7 +305,25 @@ async function createUser(username, password) {
     if (response.ok) {
       response.json().then((json) => {
         alert("User " + json.username + " created!");
+        actionHeader.value = "Success!";
+        complete.value = true;
+
+        setTimeout(() => {
+          clickSignin();
+        }, 500);
+
+        setTimeout(() => {
+          complete.value = false;
+        }, 1500);
       });
+    } else {
+      actionHeader.value = "Failed!";
+      failed.value = true;
+
+      setTimeout(() => {
+        failed.value = false;
+        actionHeader.value = "Sign up ";
+      }, 1500);
     }
   });
 }
@@ -287,10 +351,27 @@ async function logIn(username, password) {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
-        alert(json.accessToken);
+        // alert(json.accessToken);
         console.log(document.cookie);
         setAccessToken(json.accessToken);
+        actionHeader.value = "Success!";
+
+        complete.value = true;
+        disableBtn.value = true;
+        setTimeout(() => {
+          complete.value = false;
+          userProfile.value = username;
+          hidePop();
+        }, 1000);
       });
+    } else {
+      actionHeader.value = "Failed!";
+      failed.value = true;
+
+      setTimeout(() => {
+        failed.value = false;
+        actionHeader.value = "Sign in";
+      }, 1500);
     }
   });
 }
@@ -301,14 +382,21 @@ let signUp = "calc(50% - 255px)";
 let signIn = "calc(50% - 150px)";
 let left = ref(false);
 let right = ref(false);
+let complete = ref(false);
+let failed = ref(false);
 let actionHeader = ref("");
+let disableBtn = ref(false);
 let isAcross = ref("");
 </script>
 
 <template>
   <!-- Vue component comprising of the main functionality of the site @click="hidePop" -->
   <div class="mainContainer">
-    <Header @signin-event="clickSignin" @signup-event="clickSignup"></Header>
+    <Header
+      :userProf="userProfile"
+      @signin-event="clickSignin"
+      @signup-event="clickSignup"
+    ></Header>
     <SignUp
       :class="{ moveRight: right, moveLeft: left }"
       :style="{ right: rightStyle }"
@@ -317,12 +405,20 @@ let isAcross = ref("");
       :isAcross="isAcross"
     >
       <div class="buttonContainer">
-        <button @click="middleware(slotProps.username, slotProps.password)">
+        <button
+          :disabled="disableBtn"
+          :class="{
+            buttonNormal: true,
+            buttonComplete: complete,
+            buttonFailed: failed,
+          }"
+          @click="middleware(slotProps.username, slotProps.password)"
+        >
           {{ actionHeader }}
         </button>
       </div>
     </SignUp>
-    <div class="for-border">
+    <div class="for-border" @click="hidePop">
       <div class="main-content main-content-radius">
         <div v-if="showMain" class="main-menu">
           <img
@@ -369,7 +465,9 @@ let isAcross = ref("");
         </div>
       </div>
     </div>
-    <Leaderboard :scores="leaderboardScores"></Leaderboard>
+    <div class="for-border">
+      <Leaderboard :scores="leaderboardScores" @click="hidePop"></Leaderboard>
+    </div>
   </div>
 </template>
 
@@ -391,6 +489,7 @@ let isAcross = ref("");
 }
 
 .for-border {
+  margin-bottom: 30px;
   background-color: #14c2cc;
   background-image: radial-gradient(
       circle farthest-side at top right,
@@ -572,15 +671,23 @@ a:link {
   margin-right: 10px;
   width: 100px;
   height: 40px;
-  border-radius: 10px;
+  border-radius: 5px;
   border-style: solid;
   font-family: "Nunito", sans-serif;
   font-size: 15px;
-  background-image: linear-gradient(to right, orange, darkorange);
   font-weight: bold;
 }
 
-button {
+.buttonFailed {
+  background-color: red;
+}
+
+.buttonComplete {
+  background-color: lightgreen;
+}
+
+.buttonNormal {
+  transition: 0.5s;
   width: 172px;
   height: 20px;
   border-radius: 5px;

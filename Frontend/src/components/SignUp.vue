@@ -1,5 +1,5 @@
 <script setup>
-import { onUpdated, ref } from "vue";
+import { onUpdated, onMounted, ref } from "vue";
 
 const props = defineProps({
   popup: Boolean,
@@ -11,6 +11,8 @@ const usr = ref(null);
 
 onUpdated(() => {
   if (props.popup) {
+    username.value = "";
+    password.value = "";
     if (props.isAcross) {
       usr.value.blur();
       setTimeout(() => {

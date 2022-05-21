@@ -52,6 +52,29 @@ app.post("/login", (req, res) => {
     })
     .catch((error) => {
       console.log("ERROR: ", error);
+      res.status(500).send("Something broke!");
+    });
+});
+
+app.post("/getTopTen", async (req, res) => {
+  db.many("select * from scores order by wpm desc limit 10").then((data) => {
+    console.log(data);
+    res.send(data);
+  });
+});
+
+app.post("/sendResult", async (req, res) => {
+  db.one("insert into scores(owner, wpm) values($1, $2)" + " returning owner", [
+    req.body.username,
+    req.body.wpm,
+  ])
+    .then((data) => {
+      console.log("data sent", data.owner);
+      res.send(data);
+    })
+    .catch((error) => {
+      console.log("ERROR:", error);
+      res.status(500).send("Something broke!");
     });
 });
 
@@ -67,6 +90,7 @@ app.post("/createUser", async (req, res) => {
     })
     .catch((error) => {
       console.log("ERROR:", error);
+      res.status(500).send("Something broke!");
     });
 });
 

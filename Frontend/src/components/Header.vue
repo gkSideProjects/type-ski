@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+const props = defineProps({
+  userProf: String,
+});
+</script>
 
 <template>
   <div class="header">
@@ -11,7 +15,7 @@
         <li><a href="#">/ contact &nbsp;&nbsp;</a></li>
         <li>
           <a href="#" @click.prevent="$emit('signinEvent')"
-            >/ sign in&nbsp;&nbsp;
+            >/ {{ userProf }}&nbsp;&nbsp;
           </a>
         </li>
         <li>
