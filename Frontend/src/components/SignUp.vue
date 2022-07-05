@@ -28,13 +28,7 @@ let username = ref("");
 let password = ref("");
 
 const emit = defineEmits({
-  buttonState: (object) => {
-    if (object[1].username.length > 0 && object[1].password.length > 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  buttonState: Boolean,
 });
 
 watch([username, password], ([username, password]) => {
