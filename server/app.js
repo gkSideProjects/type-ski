@@ -24,7 +24,7 @@ const cn = {
   port: 5432,
   database: "typeski",
   user: "postgres",
-  password: "backendgarbage",
+  password: "postgres",
   max: 30, // use up to 30 connections
 };
 
@@ -90,7 +90,11 @@ app.post("/createUser", async (req, res) => {
     })
     .catch((error) => {
       console.log("ERROR:", error);
-      res.status(500).send("Something broke!");
+      if (error.code === "23505") {
+        res.status(500).send({ errorMsg: "Duplicate username" });
+      } else {
+        res.status(500).send("Something broke!");
+      }
     });
 });
 
