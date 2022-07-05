@@ -1,5 +1,5 @@
 <script setup>
-import { onUpdated, onMounted, ref } from "vue";
+import { onUpdated, onMounted, ref, popScopeId, watch } from "vue";
 
 const props = defineProps({
   popup: Boolean,
@@ -26,6 +26,25 @@ onUpdated(() => {
 
 let username = ref("");
 let password = ref("");
+
+const emit = defineEmits({
+  buttonState: (object) => {
+    if (object[1].username.length > 0 && object[1].password.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
+
+watch([username, password], ([username, password]) => {
+  if (username.length > 0 && password.length > 0) {
+      emit("buttonState", [false, { username, password }]);
+  } else {
+    emit("buttonState", [true, { username, password }]);
+  }
+});
+
 </script>
 
 <template>

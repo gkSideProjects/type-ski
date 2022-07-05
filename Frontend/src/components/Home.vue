@@ -113,8 +113,8 @@ function finish(event) {
     showButton.value = true;
     showInformation.value = true;
     showTimer.value = false;
-    const temp = { id: Math.random(), value: finalWpm.value };
-    addScoretoLeaderboard(temp);
+    // const temp = { id: Math.random(), value: finalWpm.value };
+    addScoretoLeaderboard(finalWpm.value);
     sendResultToDB();
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
@@ -267,7 +267,7 @@ const API_URL = "http://localhost:3001";
 async function sendResultToDB() {
   if (isLoggedIn()) {
     const result = {
-      username: "user4",
+      username: "user2",
       wpm: "100",
       time_of: Date(),
     };
@@ -376,6 +376,10 @@ async function logIn(username, password) {
   });
 }
 
+function disableSignUpBtn(state) {
+  disableBtn.value = state[0];
+}
+
 let transitionClass = ref("nested");
 let rightStyle = ref("");
 let signUp = "calc(50% - 255px)";
@@ -385,7 +389,7 @@ let right = ref(false);
 let complete = ref(false);
 let failed = ref(false);
 let actionHeader = ref("");
-let disableBtn = ref(false);
+let disableBtn = ref(true);
 let isAcross = ref("");
 </script>
 
@@ -403,6 +407,7 @@ let isAcross = ref("");
       v-slot="slotProps"
       :popup="showSignin"
       :isAcross="isAcross"
+      @buttonState="disableSignUpBtn"
     >
       <div class="buttonContainer">
         <button
