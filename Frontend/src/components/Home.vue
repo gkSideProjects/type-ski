@@ -575,11 +575,11 @@ a:link {
   color: inherit;
 }
 
-.main-content-radius {
-  /* animation: Border 10s infinite;
+/* .main-content-radius {
+  animation: Border 10s infinite;
   border-radius: 30px 30px 30px 30px;
-  border: solid 4px; */
-}
+  border: solid 4px; 
+} */
 
 .main-content {
   box-shadow: 0px 0px 5px 2px rgb(0 0 0 / 20%);
