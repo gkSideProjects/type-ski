@@ -317,12 +317,17 @@ async function createUser(username, password) {
         }, 1500);
       });
     } else {
-      actionHeader.value = "Failed!";
+      response.json().then((json) => {
+        actionHeader.value = json.errorMsg;
+      });
+
       failed.value = true;
+      disableBtn.value = true;
 
       setTimeout(() => {
+        disableBtn.value = false;
         failed.value = false;
-        actionHeader.value = "Sign up ";
+        actionHeader.value = "Sign up";
       }, 1500);
     }
   });
