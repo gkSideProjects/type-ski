@@ -1,6 +1,7 @@
 <script setup>
 const props = defineProps({
   userProf: String,
+  signInState: String
 });
 </script>
 
@@ -19,7 +20,7 @@ const props = defineProps({
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="$emit('signupEvent')"
+          <a :class="{disableSignUp: props.signInState}" href="#" @click.prevent="$emit('signupEvent')"
             >/ sign up&nbsp;&nbsp;
           </a>
         </li>
@@ -28,4 +29,13 @@ const props = defineProps({
   </div>
 </template>
 
-<style></style>
+<style>
+* {
+  color: black;
+}
+
+.disableSignUp {
+  color: lightgrey;
+  pointer-events: none;
+}
+</style>
