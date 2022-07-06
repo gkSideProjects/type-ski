@@ -5,9 +5,13 @@ const props = defineProps({
   popup: Boolean,
   transitionClass: String,
   isAcross: Boolean,
+  signedIn: Boolean,
+  userUsername: String,
 });
 
 const usr = ref(null);
+let hideInputContainers = ref(false);
+const userUsernameRef = ref(null)
 
 onUpdated(() => {
   if (props.popup) {
@@ -22,6 +26,10 @@ onUpdated(() => {
       usr.value.focus();
     }
   }
+  if (props.signedIn) {
+    userUsernameRef.value = props.userUsername;
+  }
+  hideInputContainers.value = props.signedIn;
 });
 
 let username = ref("");
@@ -32,19 +40,23 @@ const emit = defineEmits({
 });
 
 watch([username, password], ([username, password]) => {
-  if (username.length > 0 && password.length > 0) {
+  if (!props.signedIn) {
+    if (username.length > 0 && password.length > 0) {
       emit("buttonState", [false, { username, password }]);
-  } else {
-    emit("buttonState", [true, { username, password }]);
+    } else {
+      emit("buttonState", [true, { username, password }]);
+    }
   }
 });
 
 </script>
-
 <template>
   <Transition duration="500" name="nested">
     <div class="signupMain" v-if="popup">
-      <div class="usernameContainer">
+      <div :class="{signedInContainer: true, showUsernameContainer: !hideInputContainers}">
+        <header>{{ userUsernameRef }}</header>
+      </div>
+      <div :class="{usernameContainer: true, showUsernameContainer: hideInputContainers}">
         <input
           placeholder="Username"
           ref="usr"
@@ -52,7 +64,7 @@ watch([username, password], ([username, password]) => {
           v-model="username"
         />
       </div>
-      <div class="passwordContainer">
+      <div :class="{passwordContainer: true, showUsernameContainer: hideInputContainers}">
         <input placeholder="Password" type="password" v-model="password" />
       </div>
       <slot :username="username" :password="password"></slot>
@@ -61,6 +73,17 @@ watch([username, password], ([username, password]) => {
 </template>
 
 <style scoped>
+
+.signedInContainer {
+  font-size: 20px;
+  text-align: center;
+  padding: 10px;
+}
+
+.showUsernameContainer {
+  display: none;
+}
+
 .nested-enter-active,
 .nested-leave-active {
   transition: all 0.3s ease-in-out;
@@ -89,7 +112,6 @@ watch([username, password], ([username, password]) => {
   border-radius: 5px;
   box-shadow: 0px 0px 10px 1px rgb(0 0 0 / 20%);
   width: 200px;
-  height: 105px;
 }
 
 input {
