@@ -103,7 +103,7 @@ function timerMethod() {
 function finish(event) {
   if (
     splitWords.value[arrayCount.value] ===
-      splitWords.value[splitWords.value.length - 1] &&
+    splitWords.value[splitWords.value.length - 1] &&
     textValue.value === splitWords.value[arrayCount.value]
   ) {
     finalTime.value = 150 - seconds.value;
@@ -236,11 +236,17 @@ async function clickSignup() {
 }
 
 async function clickSignin() {
+  if (signInState.value) {
+    actionHeader.value = "Sign Out";
+
+  } else {
+    actionHeader.value = "Sign In";
+  }
+
   if (rightStyle.value === signUp) {
     isAcross.value = true;
     left.value = true;
     rightStyle.value = signIn;
-    actionHeader.value = "Sign In";
   } else {
     if (showSignin.value) {
       hidePop();
@@ -248,7 +254,6 @@ async function clickSignin() {
     }
     isAcross.value = false;
     rightStyle.value = signIn;
-    actionHeader.value = "Sign In";
     showSignin.value = !showSignin.value;
   }
 }
@@ -338,7 +343,20 @@ function middleware(username, password) {
     logIn(username, password);
   } else if (actionHeader.value === "Sign up") {
     createUser(username, password);
+  } else {
+    signOut();
   }
+}
+
+function signOut() {
+  // localStorage.removeItem("token");
+  setTimeout(() => {
+    hidePop();
+    userProfile.value = "sign In";
+    actionHeader.value = "Sign In";
+    signInState.value = false;
+  }, 400);
+
 }
 
 async function logIn(username, password) {
@@ -360,14 +378,16 @@ async function logIn(username, password) {
         console.log(document.cookie);
         setAccessToken(json.accessToken);
         actionHeader.value = "Success!";
-
+        userUsername.value = username;
         complete.value = true;
         disableBtn.value = true;
         setTimeout(() => {
           complete.value = false;
           userProfile.value = username;
           hidePop();
-        }, 1000);
+          signInState.value = true;
+          disableBtn.value = false;
+        }, 400);
       });
     } else {
       actionHeader.value = "Failed!";
@@ -396,34 +416,24 @@ let failed = ref(false);
 let actionHeader = ref("");
 let disableBtn = ref(true);
 let isAcross = ref("");
+let signInState = ref(false);
+let userUsername = ref(null);
 </script>
 
 <template>
   <!-- Vue component comprising of the main functionality of the site @click="hidePop" -->
   <div class="mainContainer">
-    <Header
-      :userProf="userProfile"
-      @signin-event="clickSignin"
-      @signup-event="clickSignup"
-    ></Header>
-    <SignUp
-      :class="{ moveRight: right, moveLeft: left }"
-      :style="{ right: rightStyle }"
-      v-slot="slotProps"
-      :popup="showSignin"
-      :isAcross="isAcross"
-      @buttonState="disableSignUpBtn"
-    >
+    <Header :userProf="userProfile" @signin-event="clickSignin" @signup-event="clickSignup" :signInState="signInState">
+    </Header>
+    <SignUp :class="{ moveRight: right, moveLeft: left }" :style="{ right: rightStyle }" v-slot="slotProps"
+      :popup="showSignin" :isAcross="isAcross" @buttonState="disableSignUpBtn" :signedIn="signInState"
+      :userUsername="userUsername">
       <div class="buttonContainer">
-        <button
-          :disabled="disableBtn"
-          :class="{
-            buttonNormal: true,
-            buttonComplete: complete,
-            buttonFailed: failed,
-          }"
-          @click="middleware(slotProps.username, slotProps.password)"
-        >
+        <button :disabled="disableBtn" :class="{
+          buttonNormal: true,
+          buttonComplete: complete,
+          buttonFailed: failed,
+        }" @click="middleware(slotProps.username, slotProps.password)">
           {{ actionHeader }}
         </button>
       </div>
@@ -431,36 +441,19 @@ let isAcross = ref("");
     <div class="for-border" @click="hidePop">
       <div class="main-content main-content-radius">
         <div v-if="showMain" class="main-menu">
-          <img
-            style="height: 66px; width: 100px; transform: rotate(5deg)"
-            src="../assets/type-ski.png"
-          />
-          <a
-            href="#"
-            @click="clickShow"
-            style="margin-top: auto; margin-bottom: auto"
-            ><p style="margin: 0; font-size: 30px">Take test</p></a
-          >
+          <img style="height: 66px; width: 100px; transform: rotate(5deg)" src="../assets/type-ski.png" />
+          <a href="#" @click="clickShow" style="margin-top: auto; margin-bottom: auto">
+            <p style="margin: 0; font-size: 30px">Take test</p>
+          </a>
         </div>
         <div v-if="showPracticeDiv" class="practice-div">
           <div class="text-border">
-            <p
-              id="text-to-type"
-              v-if="showText"
-              :ref="(el) => (wordRef[i] = el)"
-              class="typeText"
-              v-for="(splitWord, i) in splitWords"
-            >
+            <p id="text-to-type" v-if="showText" :ref="(el) => (wordRef[i] = el)" class="typeText"
+              v-for="(splitWord, i) in splitWords">
               {{ splitWord }}
             </p>
-            <input
-              ref="textInput"
-              class="enter-text"
-              v-if="showInput"
-              @keydown="clearText"
-              @keyup="finish"
-              v-model="textValue"
-            />
+            <input ref="textInput" class="enter-text" v-if="showInput" @keydown="clearText" @keyup="finish"
+              v-model="textValue" />
             <p v-if="showTimer">
               {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
             </p>
@@ -489,10 +482,12 @@ let isAcross = ref("");
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
 
 @keyframes bg-change {
+
   0%,
   100% {
     filter: hue-rotate(0deg);
   }
+
   50% {
     filter: hue-rotate(-45deg);
   }
@@ -501,11 +496,9 @@ let isAcross = ref("");
 .for-border {
   margin-bottom: 30px;
   background-color: #14c2cc;
-  background-image: radial-gradient(
-      circle farthest-side at top right,
+  background-image: radial-gradient(circle farthest-side at top right,
       transparent,
-      #0d64ff
-    ),
+      #0d64ff),
     radial-gradient(ellipse farthest-corner at 0% 100%, transparent, #ff00a0);
   animation: bg-change 5s infinite;
   padding: 12px;
@@ -572,7 +565,6 @@ body {
 a:visited,
 a:link {
   text-decoration: none;
-  color: inherit;
 }
 
 /* .main-content-radius {
@@ -598,18 +590,21 @@ a:link {
   display: flex;
 }
 
-.main-menu > a {
+.main-menu>a {
   padding-left: 20px;
 }
 
 @media only screen and (max-width: 550px) {
+
   html,
   body {
     min-width: 100%;
   }
+
   .header {
     min-width: 100%;
   }
+
   .main-content {
     width: 90%;
     min-width: 300px;
@@ -710,5 +705,6 @@ a:link {
 .buttonContainer {
   width: 100%;
   text-align: center;
+  padding-bottom: 10px;
 }
 </style>
