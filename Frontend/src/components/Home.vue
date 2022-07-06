@@ -371,6 +371,8 @@ async function logIn(username, password) {
     headers: {
       "Content-type": "application/json",
     },
+    credentials: "include",
+    mode: "cors",
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
@@ -694,11 +696,10 @@ a:link {
 .buttonNormal {
   transition: 0.5s;
   width: 172px;
-  height: 20px;
   border-radius: 5px;
   border: 1px black solid;
   font-family: "Nunito", sans-serif;
-  font-size: 10px;
+  font-size: 15px;
   font-weight: bold;
 }
 

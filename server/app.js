@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000",
+    credentials: true
   })
 );
 
@@ -44,10 +45,11 @@ app.post("/login", (req, res) => {
       } else {
         const access = createAccessToken(req);
         const refresh = createRefreshToken(req);
-        res.cookie("815", refresh, { httpOnly: true });
+        res.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        res.cookie("815", refresh, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
+        res.cookie("access", access, { httpOnly: true, maxAge: 1000 * 60 * 15 });
         res.status(200);
-        res.send({ accessToken: access });
-        return res;
+        res.send({"message": "logged in"});
       }
     })
     .catch((error) => {
