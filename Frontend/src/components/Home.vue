@@ -39,7 +39,28 @@ let finalTime = ref(0);
 let wordRef = ref([]);
 const textInput = ref(null);
 
+async function authenticateUser() {
+  let response = await fetch(API_URL + "/cookieAuth", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    mode: "cors",
+  });
+
+  if (response.ok) {
+    response.json().then((data) => {
+      if (data.username) {
+        signInState.value = true;
+        userUsername.value = data.username;
+        userProfile.value = data.username;
+      }
+    });
+  }
+}
+
 onMounted(() => {
+  authenticateUser();
   fetch(API_URL + "/getTopTen", {
     method: "POST",
     headers: {

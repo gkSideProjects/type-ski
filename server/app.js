@@ -2,18 +2,20 @@ import express from "express";
 import { compare } from "bcryptjs";
 import { createRefreshToken, createAccessToken } from "./auth";
 import "dotenv/config";
-
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 const app = express();
 const port = 3001;
 import cors from "cors";
 
 app.use(express.json());
+app.use(cookieParser());
 
 //cors
 app.use(
   cors({
     origin: "http://localhost:3000",
-    credentials: true
+    credentials: true,
   })
 );
 
@@ -31,6 +33,19 @@ const cn = {
 
 const db = pgp(cn);
 
+app.get("/cookieAuth", async (req, res) => {
+  const access = req.cookies.access;
+  // const refresh = req.cookies.refresh;
+  if (access !== undefined) {
+    try {
+      const data = jwt.verify(access, process.env.ACCESS_TOKEN);
+      res.status(200).send(data);
+    } catch (err) {
+      res.status(401).send("Invalid access token");
+    }
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -46,10 +61,16 @@ app.post("/login", (req, res) => {
         const access = createAccessToken(req);
         const refresh = createRefreshToken(req);
         res.set("Access-Control-Allow-Origin", "http://localhost:3000");
-        res.cookie("815", refresh, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 });
-        res.cookie("access", access, { httpOnly: true, maxAge: 1000 * 60 * 15 });
+        res.cookie("refresh", refresh, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+        });
+        res.cookie("access", access, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 15,
+        });
         res.status(200);
-        res.send({"message": "logged in"});
+        res.send({ message: "logged in" });
       }
     })
     .catch((error) => {
@@ -60,7 +81,7 @@ app.post("/login", (req, res) => {
 
 app.post("/getTopTen", async (req, res) => {
   db.many("select * from scores order by wpm desc limit 10").then((data) => {
-    console.log(data);
+    // console.log(data);
     res.send(data);
   });
 });
