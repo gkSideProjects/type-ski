@@ -33,6 +33,18 @@ const cn = {
 
 const db = pgp(cn);
 
+app.get("/logout", async (req, res) => {
+  const access = req.cookies.access;
+  const refresh = req.cookies.refresh;
+  if (access !== undefined) {
+    res.clearCookie("access");
+  }
+  if (refresh !== undefined) {
+    res.clearCookie("refresh");
+  }
+  res.send("logout");
+});
+
 app.get("/cookieAuth", async (req, res) => {
   const access = req.cookies.access;
   // const refresh = req.cookies.refresh;
