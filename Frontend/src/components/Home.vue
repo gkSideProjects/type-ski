@@ -5,39 +5,73 @@ import Leaderboard from "./Leaderboard.vue";
 import SignUp from "./SignUp.vue";
 import Header from "./Header.vue";
 import { hash } from "bcryptjs";
-import { setAccessToken, getAccessToken } from "../accessToken";
 
-/* Array that is filled by the chosen text from 'arrayOfTests' after a split of
-the text. Each word has it's own location in the array */
-let textArray = ref([]);
+// User states
+let [userUsername, signInState] = [ref(null), ref(false)];
+
+// Class style states
+let transitionClass = ref("nested");
+let moveLeftClass = ref(false);
+let moveRightClass = ref(false);
+let buttonCompleteClass = ref(false);
+let buttonFailedClass = ref(false);
+
+// Style states
+let rightCssStyle = ref("");
+let signUpStyle = "calc(50% - 255px)";
+let signInStyle = "calc(50% - 150px)";
+
+// Button states
+let authBtnText = ref("");
+let disableBtnAtt = ref(true);
+let btnPosRight = ref("");
+
+/* Array of chosen text from 'arrayOfTests' after split. 
+Each word has it's own location in the array */
+let wordsOfText = ref([]);
+
+// Array of top 10 scores from db
 let leaderboardScores = ref([]);
 
-let showSignup = ref(false);
-let showSignin = ref(false);
+// View render states
+let signInViewState = ref(false);
+let timerViewState = ref(false);
+let mainViewState = ref(true);
+let practiceViewState = ref(false);
+let txtViewState = ref(true);
+let txtInputViewState = ref(true);
+let infoViewState = ref(false);
+let nextBtnViewState = ref(false);
 
-let userProfile = ref("sign in");
+// Sign in header text
+let signInHeaderTxt = ref("sign in");
 
-let docState = ref("");
+// Input text value
+let txtInputValue = ref("");
 
-let showTimer = ref(false);
+// Word typed by user
+let wordsTypedCount = ref(0);
 
-let showMain = ref(true);
-let showPracticeDiv = ref(false);
-let showText = ref(true);
-let showInput = ref(true);
-let showInformation = ref(false);
-let showButton = ref(false);
+// Index of current word to be typed
+let currentWord = ref(0);
 
-let textValue = ref("");
-let arrayCount = ref(0);
-let counter = ref(0);
+// Starting time of timer
 let seconds = ref(150);
-let timeInterval = ref(0);
-let letterCount = ref(1);
-let finalTime = ref(0);
 
+// Timer state
+let intervalState = ref(0);
+
+// Index of current letter in current word
+let letterCount = ref(1);
+
+// Completed race time (150 - n where n = race duration | 0 > n <= 150)
+let finalTimeValue = ref(0);
+
+// Reference to words in text
 let wordRef = ref([]);
-const textInput = ref(null);
+
+// Reference to user input in race
+const txtInputRef = ref(null);
 
 async function authenticateUser() {
   let response = await fetch(API_URL + "/cookieAuth", {
@@ -52,9 +86,9 @@ async function authenticateUser() {
     response.json().then((data) => {
       if (data.username) {
         signInState.value = true;
-        disableBtn.value = false;
+        disableBtnAtt.value = false;
         userUsername.value = data.username;
-        userProfile.value = data.username;
+        signInHeaderTxt.value = data.username;
       }
     });
   }
@@ -82,40 +116,40 @@ onMounted(async () => {
 });
 
 function clickShow() {
-  showTimer.value = true;
-  showMain.value = false;
-  showPracticeDiv.value = true;
+  timerViewState.value = true;
+  mainViewState.value = false;
+  practiceViewState.value = true;
   resetValues();
   resetValues1();
 }
 
 function clickHome() {
-  showMain.value = true;
-  showPracticeDiv.value = false;
-  showButton.value = false;
+  mainViewState.value = true;
+  practiceViewState.value = false;
+  nextBtnViewState.value = false;
 }
 
 function resetValues() {
-  showInformation.value = false;
-  showTimer.value = true;
-  textValue.value = "";
-  showText.value = true;
-  showInput.value = true;
-  showButton.value = false;
+  infoViewState.value = false;
+  timerViewState.value = true;
+  txtInputValue.value = "";
+  txtViewState.value = true;
+  txtInputViewState.value = true;
+  nextBtnViewState.value = false;
+  intervalState.value = 0;
   seconds.value = 150;
-  arrayCount.value = 0;
+  wordsTypedCount.value = 0;
   nextTick(() => {
-    textInput.value.focus();
-    console.log(textInput.value);
+    txtInputRef.value.focus();
   });
 }
 
 function resetValues1() {
-  counter.value = 0;
+  currentWord.value = 0;
   splitWords.value = Math.floor(Math.random() * 2);
   letterCount.value = 1;
-  timeInterval.value = 0;
-  textValue.value = "";
+  intervalState.value = 0;
+  txtInputValue.value = "";
 }
 
 function timerMethod() {
@@ -124,19 +158,20 @@ function timerMethod() {
 
 function finish(event) {
   if (
-    splitWords.value[arrayCount.value] ===
-    splitWords.value[splitWords.value.length - 1] &&
-    textValue.value === splitWords.value[arrayCount.value]
+    splitWords.value[wordsTypedCount.value] ===
+      splitWords.value[splitWords.value.length - 1] &&
+    txtInputValue.value === splitWords.value[wordsTypedCount.value]
   ) {
-    finalTime.value = 150 - seconds.value;
-    clearInterval(timeInterval.value);
-    showText.value = false;
-    showInput.value = false;
-    showButton.value = true;
-    showInformation.value = true;
-    showTimer.value = false;
+    finalTimeValue.value = 150 - seconds.value;
+    clearInterval(intervalState.value);
+    txtViewState.value = false;
+    txtInputViewState.value = false;
+    nextBtnViewState.value = true;
+    infoViewState.value = true;
+    timerViewState.value = false;
     // const temp = { id: Math.random(), value: finalWpm.value };
-    addScoretoLeaderboard(finalWpm.value);
+    let newValue = { id: userUsername.value, value: finalWpm.value };
+    addScoretoLeaderboard(newValue);
     sendResultToDB();
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
@@ -146,10 +181,10 @@ function finish(event) {
 }
 
 function isLoggedIn() {
-  if (getAccessToken() == "") {
-    return false;
-  } else {
+  if (signInState.value) {
     return true;
+  } else {
+    return false;
   }
 }
 
@@ -188,22 +223,22 @@ function addScoretoLeaderboard(wpm) {
 }
 
 function clearText(event) {
-  if (timeInterval.value === 0) {
-    timeInterval.value = setInterval(timerMethod, 1000);
+  if (intervalState.value === 0) {
+    intervalState.value = setInterval(timerMethod, 1000);
   }
 
   if (
-    textValue.value === splitWords.value[arrayCount.value] &&
-    textValue.value !== ""
+    txtInputValue.value === splitWords.value[wordsTypedCount.value] &&
+    txtInputValue.value !== ""
   ) {
-    wordRef.value[counter.value].style.color = "#00b300";
+    wordRef.value[currentWord.value].style.color = "#00b300";
     event.preventDefault();
-    counter.value++;
-    textValue.value = "";
-    return arrayCount.value++;
+    currentWord.value++;
+    txtInputValue.value = "";
+    return wordsTypedCount.value++;
   }
 
-  wordRef.value[counter.value].style.color = "indianred";
+  wordRef.value[currentWord.value].style.color = "indianred";
 
   if (event.key === " ") {
     event.preventDefault();
@@ -211,12 +246,12 @@ function clearText(event) {
 }
 
 let finalWpm = computed(() => {
-  return Math.round((60 / finalTime.value) * arrayCount.value);
+  return Math.round((60 / finalTimeValue.value) * wordsTypedCount.value);
 });
 
 let wpm = computed(() => {
   let result = Math.round(
-    (60 / (150 - seconds.value - 0.5)) * arrayCount.value
+    (60 / (150 - seconds.value - 0.5)) * wordsTypedCount.value
   );
   if (seconds.value < 149) {
     return result;
@@ -227,66 +262,64 @@ let wpm = computed(() => {
 
 let splitWords = computed({
   get() {
-    return (textArray =
-      arrayOfTests2[Math.floor(Math.random() * 2)].split(" "));
+    return (wordsOfText =
+      arrayOfTests[Math.floor(Math.random() * 2)].split(" "));
   },
   set(newVal) {
-    textArray = arrayOfTests2[newVal].split(" ");
-    splitWords.length = textArray.length;
-    for (var i = 0; i < textArray.length; i++) {
-      splitWords[i] = textArray[i];
+    wordsOfText = arrayOfTests[newVal].split(" ");
+    splitWords.length = wordsOfText.length;
+    for (var i = 0; i < wordsOfText.length; i++) {
+      splitWords[i] = wordsOfText[i];
     }
   },
 });
 
 async function clickSignup() {
-  if (rightStyle.value === signIn) {
-    isAcross.value = true;
-    right.value = true;
-    rightStyle.value = signUp;
-    actionHeader.value = "Sign up";
+  if (rightCssStyle.value === signInStyle) {
+    btnPosRight.value = true;
+    moveRightClass.value = true;
+    rightCssStyle.value = signUpStyle;
+    authBtnText.value = "Sign up";
   } else {
-    if (showSignin.value) {
+    if (signInViewState.value) {
       hidePop();
       return;
     }
-    isAcross.value = false;
-    rightStyle.value = signUp;
-    actionHeader.value = "Sign up";
-    showSignin.value = !showSignin.value;
+    btnPosRight.value = false;
+    rightCssStyle.value = signUpStyle;
+    authBtnText.value = "Sign up";
+    signInViewState.value = !signInViewState.value;
   }
 }
 
 async function clickSignin() {
   if (signInState.value) {
-    actionHeader.value = "Sign Out";
-
+    authBtnText.value = "Sign Out";
   } else {
-    actionHeader.value = "Sign In";
+    authBtnText.value = "Sign in";
   }
 
-  if (rightStyle.value === signUp) {
-    isAcross.value = true;
-    left.value = true;
-    rightStyle.value = signIn;
+  if (rightCssStyle.value === signUpStyle) {
+    btnPosRight.value = true;
+    moveLeftClass.value = true;
+    rightCssStyle.value = signInStyle;
   } else {
-    if (showSignin.value) {
+    if (signInViewState.value) {
       hidePop();
       return;
     }
-    isAcross.value = false;
-    rightStyle.value = signIn;
-    showSignin.value = !showSignin.value;
+    btnPosRight.value = false;
+    rightCssStyle.value = signInStyle;
+    signInViewState.value = !signInViewState.value;
   }
 }
 
 function hidePop() {
-  rightStyle.value = "";
+  rightCssStyle.value = "";
   transitionClass.value = "nested";
-  showSignin.value = false;
-
-  actionHeader.value = "";
-  isAcross.value = false;
+  signInViewState.value = false;
+  authBtnText.value = "";
+  btnPosRight.value = false;
 }
 
 const API_URL = "http://localhost:3001";
@@ -294,7 +327,7 @@ const API_URL = "http://localhost:3001";
 async function sendResultToDB() {
   if (isLoggedIn()) {
     const result = {
-      username: "user2",
+      username: "user1",
       wpm: "100",
       time_of: Date(),
     };
@@ -332,38 +365,38 @@ async function createUser(username, password) {
     if (response.ok) {
       response.json().then((json) => {
         alert("User " + json.username + " created!");
-        actionHeader.value = "Success!";
-        complete.value = true;
+        authBtnText.value = "Success!";
+        buttonCompleteClass.value = true;
 
         setTimeout(() => {
           clickSignin();
         }, 500);
 
         setTimeout(() => {
-          complete.value = false;
+          buttonCompleteClass.value = false;
         }, 1500);
       });
     } else {
       response.json().then((json) => {
-        actionHeader.value = json.errorMsg;
+        authBtnText.value = json.errorMsg;
       });
 
-      failed.value = true;
-      disableBtn.value = true;
+      buttonFailedClass.value = true;
+      disableBtnAtt.value = true;
 
       setTimeout(() => {
-        disableBtn.value = false;
-        failed.value = false;
-        actionHeader.value = "Sign up";
+        disableBtnAtt.value = false;
+        buttonFailedClass.value = false;
+        authBtnText.value = "Sign up";
       }, 1500);
     }
   });
 }
 
 function middleware(username, password) {
-  if (actionHeader.value === "Sign In") {
+  if (authBtnText.value === "Sign in") {
     logIn(username, password);
-  } else if (actionHeader.value === "Sign up") {
+  } else if (authBtnText.value === "Sign up") {
     createUser(username, password);
   } else {
     signOut();
@@ -376,16 +409,16 @@ async function signOut() {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    mode: "cors"
+    mode: "cors",
   });
 
   // localStorage.removeItem("token");
   setTimeout(() => {
     hidePop();
-    userProfile.value = "sign In";
-    actionHeader.value = "Sign In";
+    signInHeaderTxt.value = "sign in";
+    authBtnText.value = "sign in";
     signInState.value = false;
-    disableBtn.value = true;
+    disableBtnAtt.value = true;
   }, 400);
 }
 
@@ -405,96 +438,110 @@ async function logIn(username, password) {
     mode: "cors",
   }).then(function (response) {
     if (response.ok) {
-      response.json().then((json) => {
-        // alert(json.accessToken);
-        console.log(document.cookie);
-        setAccessToken(json.accessToken);
-        actionHeader.value = "Success!";
+      buttonCompleteClass.value = true;
+      disableBtnAtt.value = true;
+      setTimeout(async () => {
+        await hidePop();
+        buttonCompleteClass.value = false;
+        signInHeaderTxt.value = username;
+        signInState.value = true;
+        disableBtnAtt.value = false;
         userUsername.value = username;
-        complete.value = true;
-        disableBtn.value = true;
-        setTimeout(() => {
-          complete.value = false;
-          userProfile.value = username;
-          hidePop();
-          signInState.value = true;
-          disableBtn.value = false;
-        }, 400);
-      });
+      }, 200);
     } else {
-      actionHeader.value = "Failed!";
-      failed.value = true;
+      authBtnText.value = "Failed!";
+      buttonFailedClass.value = true;
 
       setTimeout(() => {
-        failed.value = false;
-        actionHeader.value = "Sign in";
+        buttonFailedClass.value = false;
+        authBtnText.value = "Sign in";
       }, 1500);
     }
   });
 }
 
 function disableSignUpBtn(state) {
-  disableBtn.value = state[0];
+  disableBtnAtt.value = state[0];
 }
-
-let transitionClass = ref("nested");
-let rightStyle = ref("");
-let signUp = "calc(50% - 255px)";
-let signIn = "calc(50% - 150px)";
-let left = ref(false);
-let right = ref(false);
-let complete = ref(false);
-let failed = ref(false);
-let actionHeader = ref("");
-let disableBtn = ref(true);
-let isAcross = ref("");
-let signInState = ref(false);
-let userUsername = ref(null);
 </script>
 
 <template>
   <!-- Vue component comprising of the main functionality of the site @click="hidePop" -->
   <div class="mainContainer">
-    <Header :userProf="userProfile" @signin-event="clickSignin" @signup-event="clickSignup" :signInState="signInState">
+    <Header
+      :userProf="signInHeaderTxt"
+      @signin-event="clickSignin"
+      @signup-event="clickSignup"
+      :signInState="signInState"
+    >
     </Header>
-    <SignUp :class="{ moveRight: right, moveLeft: left }" :style="{ right: rightStyle }" v-slot="slotProps"
-      :popup="showSignin" :isAcross="isAcross" @buttonState="disableSignUpBtn" :signedIn="signInState"
-      :userUsername="userUsername">
+    <SignUp
+      :class="{ moveRight: moveRightClass, moveLeft: moveLeftClass }"
+      :style="{ right: rightCssStyle }"
+      v-slot="slotProps"
+      :popup="signInViewState"
+      :isAcross="btnPosRight"
+      @buttonState="disableSignUpBtn"
+      :signedIn="signInState"
+      :userUsername="userUsername"
+    >
       <div class="buttonContainer">
-        <button :disabled="disableBtn" :class="{
-          buttonNormal: true,
-          buttonComplete: complete,
-          buttonFailed: failed,
-        }" @click="middleware(slotProps.username, slotProps.password)">
-          {{ actionHeader }}
+        <button
+          :disabled="disableBtnAtt"
+          :class="{
+            buttonNormal: true,
+            buttonComplete: buttonCompleteClass,
+            buttonFailed: buttonFailedClass,
+          }"
+          @click="middleware(slotProps.username, slotProps.password)"
+        >
+          {{ authBtnText }}
         </button>
       </div>
     </SignUp>
     <div class="for-border" @click="hidePop">
       <div class="main-content main-content-radius">
-        <div v-if="showMain" class="main-menu">
-          <img style="height: 66px; width: 100px; transform: rotate(5deg)" src="../assets/type-ski.png" />
-          <a href="#" @click="clickShow" style="margin-top: auto; margin-bottom: auto">
+        <div v-if="mainViewState" class="main-menu">
+          <img
+            style="height: 66px; width: 100px; transform: rotate(5deg)"
+            src="../assets/type-ski.png"
+          />
+          <a
+            href="#"
+            @click="clickShow"
+            style="margin-top: auto; margin-bottom: auto"
+          >
             <p style="margin: 0; font-size: 30px">Take test</p>
           </a>
         </div>
-        <div v-if="showPracticeDiv" class="practice-div">
+        <div v-if="practiceViewState" class="practice-div">
           <div class="text-border">
-            <p id="text-to-type" v-if="showText" :ref="(el) => (wordRef[i] = el)" class="typeText"
-              v-for="(splitWord, i) in splitWords">
+            <p
+              id="text-to-type"
+              v-if="txtViewState"
+              :ref="(el) => (wordRef[i] = el)"
+              class="typeText"
+              v-for="(splitWord, i) in splitWords"
+            >
               {{ splitWord }}
             </p>
-            <input ref="textInput" class="enter-text" v-if="showInput" @keydown="clearText" @keyup="finish"
-              v-model="textValue" />
-            <p v-if="showTimer">
+            <input
+              ref="txtInputRef"
+              class="enter-text"
+              v-if="txtInputViewState"
+              @keydown="clearText"
+              @keyup="finish"
+              v-model="txtInputValue"
+            />
+            <p v-if="timerViewState">
               {{ "Time : " + seconds }}<br />{{ "wpm : " + wpm }}
             </p>
-            <p id="information" v-if="showInformation">
+            <p id="information" v-if="infoViewState">
               {{ "You typed the text at " + finalWpm + " wpm" }}
             </p>
           </div>
         </div>
-        <div class="nextRaceDiv" v-if="showButton">
+        <div class="nextRaceDiv" v-if="nextBtnViewState">
           <button @click="resetValues" class="nextRace">Next race</button>
           <button @click="clickHome" class="nextRace">Home</button>
         </div>
@@ -514,7 +561,6 @@ let userUsername = ref(null);
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
 
 @keyframes bg-change {
-
   0%,
   100% {
     filter: hue-rotate(0deg);
@@ -528,9 +574,11 @@ let userUsername = ref(null);
 .for-border {
   margin-bottom: 30px;
   background-color: #14c2cc;
-  background-image: radial-gradient(circle farthest-side at top right,
+  background-image: radial-gradient(
+      circle farthest-side at top right,
       transparent,
-      #0d64ff),
+      #0d64ff
+    ),
     radial-gradient(ellipse farthest-corner at 0% 100%, transparent, #ff00a0);
   animation: bg-change 5s infinite;
   padding: 12px;
@@ -622,12 +670,11 @@ a:link {
   display: flex;
 }
 
-.main-menu>a {
+.main-menu > a {
   padding-left: 20px;
 }
 
 @media only screen and (max-width: 550px) {
-
   html,
   body {
     min-width: 100%;
