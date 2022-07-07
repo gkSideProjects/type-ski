@@ -53,18 +53,13 @@ watch([username, password], ([username, password]) => {
 <template>
   <Transition duration="500" name="nested">
     <div class="signupMain" v-if="popup">
-      <div :class="{signedInContainer: true, showUsernameContainer: !hideInputContainers}">
+      <div :class="{ signedInContainer: true, showUsernameContainer: !hideInputContainers }">
         <header>{{ userUsernameRef }}</header>
       </div>
-      <div :class="{usernameContainer: true, showUsernameContainer: hideInputContainers}">
-        <input
-          placeholder="Username"
-          ref="usr"
-          type="text"
-          v-model="username"
-        />
+      <div :class="{ usernameContainer: true, showUsernameContainer: hideInputContainers }">
+        <input placeholder="Username" ref="usr" type="text" v-model="username" />
       </div>
-      <div :class="{passwordContainer: true, showUsernameContainer: hideInputContainers}">
+      <div :class="{ passwordContainer: true, showUsernameContainer: hideInputContainers }">
         <input placeholder="Password" type="password" v-model="password" />
       </div>
       <slot :username="username" :password="password"></slot>
@@ -73,7 +68,6 @@ watch([username, password], ([username, password]) => {
 </template>
 
 <style scoped>
-
 .signedInContainer {
   font-size: 20px;
   text-align: center;

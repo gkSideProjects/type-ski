@@ -52,6 +52,7 @@ async function authenticateUser() {
     response.json().then((data) => {
       if (data.username) {
         signInState.value = true;
+        disableBtn.value = false;
         userUsername.value = data.username;
         userProfile.value = data.username;
       }
@@ -59,8 +60,8 @@ async function authenticateUser() {
   }
 }
 
-onMounted(() => {
-  authenticateUser();
+onMounted(async () => {
+  await authenticateUser();
   fetch(API_URL + "/getTopTen", {
     method: "POST",
     headers: {
@@ -369,15 +370,23 @@ function middleware(username, password) {
   }
 }
 
-function signOut() {
+async function signOut() {
+  let response = await fetch(API_URL + "/logout", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    mode: "cors"
+  });
+
   // localStorage.removeItem("token");
   setTimeout(() => {
     hidePop();
     userProfile.value = "sign In";
     actionHeader.value = "Sign In";
     signInState.value = false;
+    disableBtn.value = true;
   }, 400);
-
 }
 
 async function logIn(username, password) {
