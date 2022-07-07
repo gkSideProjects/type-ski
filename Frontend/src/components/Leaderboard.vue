@@ -11,10 +11,14 @@ defineProps({
     </header>
     <div class="listContainer">
       <transition-group name="list">
-        <li class="scores" v-for="(score, index) in scores" :key="score.id">
+        <li
+          class="scores"
+          v-for="(score, index) in scores"
+          :key="score.time_of"
+        >
           <p class="index2">{{ index + 1 }}</p>
-          <p class="name">{{ score.id }}</p>
-          <p class="wpm">{{ score.value }}wpm</p>
+          <p class="name">{{ score.owner }}</p>
+          <p class="wpm">{{ score.wpm }}wpm</p>
         </li>
       </transition-group>
     </div>
