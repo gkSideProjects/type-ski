@@ -104,13 +104,16 @@ onMounted(async () => {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
+        if (json.length === undefined) {
+          return;
+        }
         for (let x of json) {
-          let newValue = { id: x.owner, value: x.wpm };
+          let newValue = { owner: x.owner, wpm: x.wpm, time_of: x.time_of };
           leaderboardScores.value.push(newValue);
         }
       });
     } else {
-      alert("failed");
+      // failure
     }
   });
 });
@@ -169,10 +172,10 @@ function finish(event) {
     nextBtnViewState.value = true;
     infoViewState.value = true;
     timerViewState.value = false;
-    // const temp = { id: Math.random(), value: finalWpm.value };
-    let newValue = { id: userUsername.value, value: finalWpm.value };
-    addScoretoLeaderboard(newValue);
-    sendResultToDB();
+    const newValue = { owner: userUsername.value, wpm: finalWpm.value };
+    const newValueWithDate = { ...newValue, time_of: new Date() };
+    addScoretoLeaderboard(newValueWithDate);
+    sendResultToDB(newValue);
     for (var i = 0; i < wordRef.value.length; i++) {
       wordRef.value[i].style.color = "black";
     }
@@ -188,35 +191,34 @@ function isLoggedIn() {
   }
 }
 
-function addScoretoLeaderboard(wpm) {
+function addScoretoLeaderboard(value) {
   if (!isLoggedIn()) {
     return;
   }
   const leaderScore = leaderboardScores.value.length;
-
   if (leaderScore === 0) {
-    leaderboardScores.value.push(wpm);
+    leaderboardScores.value.push(value);
   } else if (leaderScore < 10) {
     const found = leaderboardScores.value.find(
-      (element) => element.value < wpm.value
+      (element) => element.wpm < value.wpm
     );
 
     if (found === undefined) {
-      leaderboardScores.value.push(wpm);
+      leaderboardScores.value.push(value);
     } else {
       const indexFound = leaderboardScores.value.indexOf(found);
-      leaderboardScores.value.splice(indexFound, 0, wpm);
+      leaderboardScores.value.splice(indexFound, 0, value);
     }
   } else {
     const lowest = leaderboardScores.value[leaderboardScores.value.length - 1];
-    if (lowest.value < wpm.value) {
+    if (lowest.wpm < value.wpm) {
       const found = leaderboardScores.value.find(
-        (element) => element.value < wpm.value
+        (element) => element.wpm < value.wpm
       );
       const indexFound = leaderboardScores.value.indexOf(found);
       leaderboardScores.value.pop();
       setTimeout(() => {
-        leaderboardScores.value.splice(indexFound, 0, wpm);
+        leaderboardScores.value.splice(indexFound, 0, value);
       }, 500);
     }
   }
@@ -324,26 +326,21 @@ function hidePop() {
 
 const API_URL = "http://localhost:3001";
 
-async function sendResultToDB() {
+async function sendResultToDB(value) {
   if (isLoggedIn()) {
-    const result = {
-      username: "user1",
-      wpm: "100",
-      time_of: Date(),
-    };
     fetch(API_URL + "/sendResult", {
       method: "POST",
-      body: JSON.stringify(result),
+      body: JSON.stringify(value),
       headers: {
         "Content-type": "application/json",
       },
     }).then(function (response) {
       if (response.ok) {
         response.json().then((json) => {
-          alert(json);
+          // success
         });
       } else {
-        alert("failed");
+        // failure
       }
     });
   }
@@ -364,7 +361,6 @@ async function createUser(username, password) {
   }).then(function (response) {
     if (response.ok) {
       response.json().then((json) => {
-        alert("User " + json.username + " created!");
         authBtnText.value = "Success!";
         buttonCompleteClass.value = true;
 
