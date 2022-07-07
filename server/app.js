@@ -55,6 +55,8 @@ app.get("/cookieAuth", async (req, res) => {
     } catch (err) {
       res.status(401).send("Invalid access token");
     }
+  } else {
+    res.send({ message: "No access token" });
   }
 });
 
@@ -92,15 +94,23 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/getTopTen", async (req, res) => {
-  db.many("select * from scores order by wpm desc limit 10").then((data) => {
-    // console.log(data);
-    res.send(data);
-  });
+  db.many("select * from scores order by wpm desc limit 10")
+    .then((data) => {
+      if (data.length > 0) {
+        res.send(data);
+      } else {
+        res.send({ message: "No scores" });
+      }
+    })
+    .catch((error) => {
+      console.log("ERROR: ", error);
+      res.send({ message: "No entries found" });
+    });
 });
 
 app.post("/sendResult", async (req, res) => {
   db.one("insert into scores(owner, wpm) values($1, $2)" + " returning owner", [
-    req.body.username,
+    req.body.owner,
     req.body.wpm,
   ])
     .then((data) => {
