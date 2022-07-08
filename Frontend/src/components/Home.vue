@@ -561,7 +561,7 @@ function disableSignUpBtn(state) {
 
 .stickContainer {
   position: sticky;
-  right: 400px;
+  right: 50%;
   z-index: 1;
 }
 
