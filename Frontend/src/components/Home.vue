@@ -471,30 +471,32 @@ function disableSignUpBtn(state) {
       :signInState="signInState"
     >
     </Header>
-    <SignUp
-      :class="{ moveRight: moveRightClass, moveLeft: moveLeftClass }"
-      :style="{ right: rightCssStyle }"
-      v-slot="slotProps"
-      :popup="signInViewState"
-      :isAcross="btnPosRight"
-      @buttonState="disableSignUpBtn"
-      :signedIn="signInState"
-      :userUsername="userUsername"
-    >
-      <div class="buttonContainer">
-        <button
-          :disabled="disableBtnAtt"
-          :class="{
-            buttonNormal: true,
-            buttonComplete: buttonCompleteClass,
-            buttonFailed: buttonFailedClass,
-          }"
-          @click="middleware(slotProps.username, slotProps.password)"
-        >
-          {{ authBtnText }}
-        </button>
-      </div>
-    </SignUp>
+    <div class="stickContainer">
+      <SignUp
+        :class="{ moveRight: moveRightClass, moveLeft: moveLeftClass }"
+        :style="{ right: rightCssStyle }"
+        v-slot="slotProps"
+        :popup="signInViewState"
+        :isAcross="btnPosRight"
+        @buttonState="disableSignUpBtn"
+        :signedIn="signInState"
+        :userUsername="userUsername"
+      >
+        <div class="buttonContainer">
+          <button
+            :disabled="disableBtnAtt"
+            :class="{
+              buttonNormal: true,
+              buttonComplete: buttonCompleteClass,
+              buttonFailed: buttonFailedClass,
+            }"
+            @click="middleware(slotProps.username, slotProps.password)"
+          >
+            {{ authBtnText }}
+          </button>
+        </div>
+      </SignUp>
+    </div>
     <div class="for-border" @click="hidePop">
       <div class="main-content main-content-radius">
         <div v-if="mainViewState" class="main-menu">
@@ -543,6 +545,7 @@ function disableSignUpBtn(state) {
         </div>
       </div>
     </div>
+
     <div class="for-border">
       <Leaderboard :scores="leaderboardScores" @click="hidePop"></Leaderboard>
     </div>
@@ -555,6 +558,12 @@ function disableSignUpBtn(state) {
   Version: 1.0.0
  */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;600&display=swap");
+
+.stickContainer {
+  position: sticky;
+  right: 400px;
+  z-index: 1;
+}
 
 @keyframes bg-change {
   0%,
