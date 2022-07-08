@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
   userProf: String,
-  signInState: Boolean
+  signInState: Boolean,
 });
 </script>
 
@@ -15,12 +15,16 @@ const props = defineProps({
         <li><a href="#">/ about&nbsp;&nbsp; </a></li>
         <li><a href="#">/ contact &nbsp;&nbsp;</a></li>
         <li>
-          <a href="#" @click.prevent="$emit('signinEvent')">/ {{ userProf }}&nbsp;&nbsp;
+          <a href="#" @click.prevent="$emit('signinEvent')"
+            >/ {{ userProf }}&nbsp;&nbsp;
           </a>
         </li>
         <li>
-          <a :class="{ disableSignUp: props.signInState }" href="#" @click.prevent="$emit('signupEvent')">/ sign
-            up&nbsp;&nbsp;
+          <a
+            :class="{ disableSignUp: props.signInState }"
+            href="#"
+            @click.prevent="$emit('signupEvent')"
+            >/ sign up&nbsp;&nbsp;
           </a>
         </li>
       </nav>

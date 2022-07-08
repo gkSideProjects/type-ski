@@ -1,10 +1,10 @@
 <script setup>
 import { arrayOfTests, arrayOfTests2 } from "../text.js";
 import { onMounted, ref, computed, nextTick } from "vue";
-import Leaderboard from "./Leaderboard.vue";
-import SignUp from "./SignUp.vue";
-import Header from "./Header.vue";
 import { hash } from "bcryptjs";
+import HeaderComponent from "./HeaderComponent.vue";
+import SignUpComponent from "./SignUpComponent.vue";
+import LeaderboardComponent from "./LeaderboardComponent.vue";
 
 // User states
 let [userUsername, signInState] = [ref(null), ref(false)];
@@ -265,7 +265,7 @@ let wpm = computed(() => {
 let splitWords = computed({
   get() {
     return (wordsOfText =
-      arrayOfTests[Math.floor(Math.random() * 2)].split(" "));
+      arrayOfTests[Math.floor(Math.random() * arrayOfTests.length)].split(" "));
   },
   set(newVal) {
     wordsOfText = arrayOfTests[newVal].split(" ");
@@ -464,15 +464,15 @@ function disableSignUpBtn(state) {
 <template>
   <!-- Vue component comprising of the main functionality of the site @click="hidePop" -->
   <div class="mainContainer">
-    <Header
+    <HeaderComponent
       :userProf="signInHeaderTxt"
       @signin-event="clickSignin"
       @signup-event="clickSignup"
       :signInState="signInState"
     >
-    </Header>
+    </HeaderComponent>
     <div class="stickContainer">
-      <SignUp
+      <SignUpComponent
         :class="{ moveRight: moveRightClass, moveLeft: moveLeftClass }"
         :style="{ right: rightCssStyle }"
         v-slot="slotProps"
@@ -495,7 +495,7 @@ function disableSignUpBtn(state) {
             {{ authBtnText }}
           </button>
         </div>
-      </SignUp>
+      </SignUpComponent>
     </div>
     <div class="for-border" @click="hidePop">
       <div class="main-content main-content-radius">
@@ -547,7 +547,10 @@ function disableSignUpBtn(state) {
     </div>
 
     <div class="for-border">
-      <Leaderboard :scores="leaderboardScores" @click="hidePop"></Leaderboard>
+      <LeaderboardComponent
+        :scores="leaderboardScores"
+        @click="hidePop"
+      ></LeaderboardComponent>
     </div>
   </div>
 </template>
